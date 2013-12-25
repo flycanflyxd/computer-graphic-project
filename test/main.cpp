@@ -20,7 +20,7 @@ are the same as the vertex values */
 
 #include "glm.h"
 #include "textfile.h"
-#include "imageIO.c"
+#include "imageIO.cpp"
 
 #define PI 3.1415926535897
 
