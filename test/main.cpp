@@ -144,6 +144,20 @@ void display(void)
     //glMatrixMode(GL_MODELVIEW);//==
     //glLoadIdentity();//===
     gluLookAt(eye_x, eye_y, eye_z, center_x, center_y, center_z, up_x, up_y, up_z);
+    glBegin( GL_QUADS );
+		//glNormal3f(0.1,0.8,0.1);
+		glColor3f(1.0, 1.0, 1.0);
+		glVertex3f( 3.0, -0.43, 3.0 );
+		//glNormal3f(0.1,0.8,-0.1);
+		glColor3f(1.0, 1.0, 1.0);
+		glVertex3f( 3.0, -0.43, -3.0 );
+		//glNormal3f(-0.1,0.8,-0.1);
+		glColor3f(1.0, 1.0, 1.0);
+		glVertex3f( -3.0, -0.43, -3.0 );
+		//glNormal3f(-0.1,0.8,0.1);
+		glColor3f(1.0, 1.0, 1.0);
+		glVertex3f( -3.0, -0.43, 3.0 );
+	glEnd();
     glutSwapBuffers();
     glutPostRedisplay();
 }
