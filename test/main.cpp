@@ -11,6 +11,7 @@ are the same as the vertex values */
 #define GLEW_STATIC
 
 #include <Windows.h>    // for solving the Code::Blocks errors
+#include <wingdi.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -38,6 +39,12 @@ GLdouble theta = PI, phi = PI / 2;
 GLdouble eye_x = 0.5, eye_y = 0.0, eye_z = 0.0,
          center_x = eye_x + sin(phi) * cos(theta), center_y = eye_y + cos(phi), center_z = sin(phi) * sin(theta),
          up_x = 0.0, up_y = 1.0, up_z = 0.0;
+GLuint *textureid;
+ColorImage texture[12]; //Edward Kenway
+//ColorImage texture[9]; //Conner Kenway
+//ColorImage texture[2]; //Alduin
+
+int t=0;
 
 bool inited = false;
 bool shader_mode=true;
@@ -86,28 +93,16 @@ void setShaders()
 
 }
 
-ColorImage x;
 void drawOBJ()
 {
-     if (! myObj) return;
-
-     glBegin(GL_TRIANGLES);
-
-    //printf("%s\n",myObj->groups->name);
+    if (! myObj) return;
 
     GLMgroup *groups = myObj->groups;
-//    GLMmaterial* material;
-//    for(int i=0;i<x.xRes*x.yRes;i+=1)
-//    {
-//        glNormal3f(x.pPixel[i].R,x.pPixel[i].G,x.pPixel[i].B);
-//    }
+    int j=0;
     while(groups)
     {
-//        material = &myObj->materials[groups->material];
-//        glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, material->ambient);
-//        glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, material->diffuse);
-//        glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, material->specular);
-//        glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, material->shininess);
+        glBindTexture(GL_TEXTURE_2D, textureid[j]);
+        glBegin(GL_TRIANGLES);
         for(int i=0;i<groups->numtriangles;i+=1)
         {
             for (int v=0; v<3; v+=1)
@@ -118,11 +113,9 @@ void drawOBJ()
             }
         }
         groups=groups->next;
+        j+=1;
+        glEnd();
     }
-
-     glEnd();
-//    glmDraw(myObj,GLM_TEXTURE|GLM_SMOOTH|GLM_MATERIAL);
-    //glmDraw(myObj,GLM_TEXTURE);
 }
 
 float eyex=0.5,eyey=0.0,eyez=0.0,turnhorizon=0.0,turnvertical=0.0,turnback=-1;
@@ -135,29 +128,29 @@ void display(void)
     glEnable(GL_LIGHT0);
     glLightfv(GL_LIGHT0, GL_POSITION, light0_pos);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    drawOBJ();
 
-    //glMatrixMode(GL_PROJECTION);//==
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
-    //gluPerspective(50.0, 1.0, 0.01, 10.0);//==
-    //glMatrixMode(GL_MODELVIEW);//==
-    //glLoadIdentity();//===
     gluLookAt(eye_x, eye_y, eye_z, center_x, center_y, center_z, up_x, up_y, up_z);
-    glBegin( GL_QUADS );
-		//glNormal3f(0.1,0.8,0.1);
-		glColor3f(1.0, 1.0, 1.0);
-		glVertex3f( 3.0, -0.43, 3.0 );
-		//glNormal3f(0.1,0.8,-0.1);
-		glColor3f(1.0, 1.0, 1.0);
-		glVertex3f( 3.0, -0.43, -3.0 );
-		//glNormal3f(-0.1,0.8,-0.1);
-		glColor3f(1.0, 1.0, 1.0);
-		glVertex3f( -3.0, -0.43, -3.0 );
-		//glNormal3f(-0.1,0.8,0.1);
-		glColor3f(1.0, 1.0, 1.0);
-		glVertex3f( -3.0, -0.43, 3.0 );
-	glEnd();
+
+    glEnable(GL_TEXTURE_2D);
+    drawOBJ();
+    glDisable(GL_TEXTURE_2D);
+
+//    glBegin( GL_QUADS );
+//		//glNormal3f(0.1,0.8,0.1);
+//		glColor3f(1.0, 1.0, 1.0);
+//		glVertex3f( 3.0, -0.43, 3.0 );
+//		//glNormal3f(0.1,0.8,-0.1);
+//		glColor3f(1.0, 1.0, 1.0);
+//		glVertex3f( 3.0, -0.43, -3.0 );
+//		//glNormal3f(-0.1,0.8,-0.1);
+//		glColor3f(1.0, 1.0, 1.0);
+//		glVertex3f( -3.0, -0.43, -3.0 );
+//		//glNormal3f(-0.1,0.8,0.1);
+//		glColor3f(1.0, 1.0, 1.0);
+//		glVertex3f( -3.0, -0.43, 3.0 );
+//	glEnd();
     glutSwapBuffers();
     glutPostRedisplay();
 }
@@ -188,7 +181,6 @@ void mouseMotion(int x, int y)
     start_y = y;
 }
 
-//float horizon_walk_displacement=0.01,vertical_walk_displacement=0.01,horizon_view_displacement=0.05,vertical_view_displacement=0.05;
 void keyboard(unsigned char key,int x,int y)
 {
     //²¾°Ê
@@ -303,25 +295,61 @@ void myReshape(int w, int h)
     glMatrixMode(GL_MODELVIEW);
 }
 
+void loadTexture(GLuint textureid,char* filename)
+{
+    readPPM(filename,&texture[t]);
+    glBindTexture(GL_TEXTURE_2D, textureid);
+    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+    glTexParameterf(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,GL_REPEAT);
+    glTexParameterf(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR_MIPMAP_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+    gluBuild2DMipmaps(GL_TEXTURE_2D,3,texture[t].xRes,texture[t].yRes,GL_RGB,GL_UNSIGNED_BYTE, texture[t].pPixel);
+    t+=1;
+}
+
+void init()
+{
+   textureid = new GLuint[myObj->numgroups-1];
+   glGenTextures(myObj->numgroups-1, textureid);
+   loadTexture(textureid[0], "eppm/Edward_Kenway_Necklace_D.ppm");
+   loadTexture(textureid[1], "eppm/Edward_Kenway_Mouth_D.ppm");
+   loadTexture(textureid[2], "eppm/Edward_Kenway_Head_D.ppm");
+   loadTexture(textureid[3], "eppm/Edward_Kenway_Arms_D.ppm");
+   loadTexture(textureid[4], "eppm/Edward_Kenway_Hair_D.ppm");
+   loadTexture(textureid[5], "eppm/Edward_Kenway_Eye_Reflection_D.ppm");
+   loadTexture(textureid[6], "eppm/Edward_Kenway_Eye_D.ppm");
+   loadTexture(textureid[7], "eppm/Edward_Kenway_Dagger2_D.ppm");
+   loadTexture(textureid[8], "eppm/Edward_Kenway_Dagger1_D.ppm");
+   loadTexture(textureid[9], "eppm/Edward_Kenway_Clothes3_D.ppm");
+   loadTexture(textureid[10], "eppm/Edward_Kenway_Clothes2_D.ppm");
+   loadTexture(textureid[11], "eppm/Edward_Kenway_Clothes1_D.ppm");
+
+//   loadTexture(textureid[0], "ppm/Connor_hand_D.ppm");
+//   loadTexture(textureid[1], "ppm/Connor_clothes4_D.ppm");
+//   loadTexture(textureid[2], "ppm/Connor_eye_D.ppm");
+//   loadTexture(textureid[3], "ppm/Connor_clothes2_D.ppm");
+//   loadTexture(textureid[4], "ppm/Connor_clothes1_D.ppm");
+//   loadTexture(textureid[5], "ppm/Connor_mouth_D.ppm");
+//   loadTexture(textureid[6], "ppm/Connor_head_D.ppm");
+//   loadTexture(textureid[7], "ppm/Connor_clothes3_D.ppm");
+//   loadTexture(textureid[8], "ppm/Connor_arm-blade_D.ppm");
+
+//   loadTexture(textureid[0], "appm/alduin.ppm");
+//   loadTexture(textureid[1], "appm/alduineyes.ppm");
+}
+
 int main(int argc, char **argv)
 {
-    myObj = glmReadOBJ("alduin.obj");
+    myObj = glmReadOBJ("Edward_Kenway.obj");
+//    myObj = glmReadOBJ("Connor_Kenway.obj");
+//    myObj = glmReadOBJ("alduin.obj");
+
     glmUnitize(myObj);
-    ColorImage texture[2];
-//    printf("%d\n",myObj->numgroups);
-//    while(myObj->groups!=NULL)
-//    {
-//        printf("%s %d\n",myObj->groups->name,myObj->groups->numtriangles);
-//        myObj->groups=myObj->groups->next;
-//    }
-//    glutInit(&argc, argv);
-//    readPPM("appm/alduin_n.ppm", &x);
-//    for(int i=0;i<x.xRes*x.yRes;i+=1)
-//    {
-//        printf("%d %d %d\n",x.pPixel[i].R,x.pPixel[i].G,x.pPixel[i].B);
-//    }
+
 	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
 	glutInitWindowSize(500,500);
+
     glutCreateWindow("HW3");
 	glutDisplayFunc(display);
 	glutReshapeFunc(myReshape);
@@ -331,22 +359,9 @@ int main(int argc, char **argv)
     glutSpecialFunc(special);
 	glEnable(GL_DEPTH_TEST); /* Enable hidden--surface--removal */
 
-    glEnable(GL_TEXTURE_2D);
-    printf("Reading texture from image file...\n");
-    readPPM("appm/alduin.ppm", &texture[0]);
-    //readPPM("appm/alduin_n.ppm", &x);
-    //readPPM("ppm/Connor_clothes3_D.ppm", &texture[1]);
-    glTexImage2D(GL_TEXTURE_2D,0,3,texture[0].xRes,texture[0].yRes,0,GL_RGB,GL_UNSIGNED_BYTE, texture[0].pPixel);
-    //glTexImage2D(GL_TEXTURE_2D,0,3,texture[1].xRes,texture[1].yRes,0,GL_RGB,GL_UNSIGNED_BYTE, texture[1].pPixel);
-    //The default is the same as: glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
-    glTexParameterf(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,GL_REPEAT);
-    glTexParameterf(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,GL_REPEAT);
-    glTexParameterf(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
-    glTexParameterf(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+    init();
 
 	glewInit();
-    //setShaders();
 
 	glutMainLoop();
     return 0;
