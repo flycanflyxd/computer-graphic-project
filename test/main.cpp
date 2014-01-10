@@ -40,9 +40,8 @@ GLdouble eye_x = 0.5, eye_y = 0.0, eye_z = 0.0,
          center_x = eye_x + sin(phi) * cos(theta), center_y = eye_y + cos(phi), center_z = sin(phi) * sin(theta),
          up_x = 0.0, up_y = 1.0, up_z = 0.0;
 GLuint *textureid;
-//ColorImage texture[12]; //Edward Kenway
-//ColorImage texture[9]; //Conner Kenway
-ColorImage texture[2]; //Alduin
+//ColorImage texture[2]; //Alduin
+ColorImage texture[8]; //Alduin
 
 int t=0;
 
@@ -135,22 +134,100 @@ void display(void)
 
     glEnable(GL_TEXTURE_2D);
     drawOBJ();
+
+    glBindTexture(GL_TEXTURE_2D, textureid[2]);
+    glBegin( GL_QUADS ); //ground
+        glTexCoord2f(0.0,0.0);
+		glVertex3f( 5.0, -0.43, 5.0 );
+
+        glTexCoord2f(0.0,1.0);
+		glVertex3f( 5.0, -0.43, -5.0 );
+
+        glTexCoord2f(1.0,1.0);
+		glVertex3f( -5.0, -0.43, -5.0 );
+
+        glTexCoord2f(1.0,0.0);
+		glVertex3f( -5.0, -0.43, 5.0 );
+	glEnd();
+
+    glBindTexture(GL_TEXTURE_2D, textureid[3]);
+	glBegin( GL_QUADS ); //sky
+		glTexCoord2f(0.0,0.0);
+		glVertex3f( 5.0, 4.43, 5.0 );
+
+        glTexCoord2f(0.0,1.0);
+		glVertex3f( 5.0, 4.43, -5.0 );
+
+        glTexCoord2f(1.0,1.0);
+		glVertex3f( -5.0, 4.43, -5.0 );
+
+        glTexCoord2f(1.0,0.0);
+		glVertex3f( -5.0, 4.43, 5.0 );
+	glEnd();
+
+//    glDisable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, textureid[4]);
+    glBegin( GL_QUADS ); //right
+		glTexCoord2f(0.0,1.0);
+		glVertex3f( 5.0, -0.43, 5.0 );
+
+        glTexCoord2f(1.0,1.0);
+		glVertex3f( 5.0, -0.43, -5.0 );
+
+        glTexCoord2f(1.0,0.0);
+        glVertex3f( 5.0, 4.43, -5.0 );
+
+        glTexCoord2f(0.0,0.0);
+        glVertex3f( 5.0, 4.43, 5.0 );
+	glEnd();
+
+    glBindTexture(GL_TEXTURE_2D, textureid[5]);
+	glBegin( GL_QUADS ); //left
+		glTexCoord2f(0.0,1.0);
+		glVertex3f( -5.0, -0.43, 5.0 );
+
+        glTexCoord2f(1.0,1.0);
+		glVertex3f( -5.0, -0.43, -5.0 );
+
+        glTexCoord2f(1.0,0.0);
+        glVertex3f( -5.0, 4.43, -5.0 );
+
+        glTexCoord2f(0.0,0.0);
+        glVertex3f( -5.0, 4.43, 5.0 );
+	glEnd();
+
+    glBindTexture(GL_TEXTURE_2D, textureid[6]);
+	glBegin( GL_QUADS ); //front
+		glTexCoord2f(0.0,1.0);
+		glVertex3f( -5.0, -0.43, -5.0 );
+
+        glTexCoord2f(1.0,1.0);
+		glVertex3f( 5.0, -0.43, -5.0 );
+
+        glTexCoord2f(1.0,0.0);
+        glVertex3f( 5.0, 4.43, -5.0 );
+
+        glTexCoord2f(0.0,0.0);
+        glVertex3f( -5.0, 4.43, -5.0 );
+	glEnd();
+
+    glBindTexture(GL_TEXTURE_2D, textureid[7]);
+	glBegin( GL_QUADS ); //back
+		glTexCoord2f(0.0,1.0);
+		glVertex3f( -5.0, -0.43, 5.0 );
+
+        glTexCoord2f(1.0,1.0);
+		glVertex3f( 5.0, -0.43, 5.0 );
+
+        glTexCoord2f(1.0,0.0);
+        glVertex3f( 5.0, 4.43, 5.0 );
+
+        glTexCoord2f(0.0,0.0);
+        glVertex3f( -5.0, 4.43, 5.0 );
+	glEnd();
+
     glDisable(GL_TEXTURE_2D);
 
-//    glBegin( GL_QUADS );
-//		//glNormal3f(0.1,0.8,0.1);
-//		glColor3f(1.0, 1.0, 1.0);
-//		glVertex3f( 3.0, -0.43, 3.0 );
-//		//glNormal3f(0.1,0.8,-0.1);
-//		glColor3f(1.0, 1.0, 1.0);
-//		glVertex3f( 3.0, -0.43, -3.0 );
-//		//glNormal3f(-0.1,0.8,-0.1);
-//		glColor3f(1.0, 1.0, 1.0);
-//		glVertex3f( -3.0, -0.43, -3.0 );
-//		//glNormal3f(-0.1,0.8,0.1);
-//		glColor3f(1.0, 1.0, 1.0);
-//		glVertex3f( -3.0, -0.43, 3.0 );
-//	glEnd();
     glutSwapBuffers();
     glutPostRedisplay();
 }
@@ -312,37 +389,19 @@ void init()
 {
    textureid = new GLuint[myObj->numgroups-1];
    glGenTextures(myObj->numgroups-1, textureid);
-//   loadTexture(textureid[0], "eppm/Edward_Kenway_Necklace_D.ppm");
-//   loadTexture(textureid[1], "eppm/Edward_Kenway_Mouth_D.ppm");
-//   loadTexture(textureid[2], "eppm/Edward_Kenway_Head_D.ppm");
-//   loadTexture(textureid[3], "eppm/Edward_Kenway_Arms_D.ppm");
-//   loadTexture(textureid[4], "eppm/Edward_Kenway_Hair_D.ppm");
-//   loadTexture(textureid[5], "eppm/Edward_Kenway_Eye_Reflection_D.ppm");
-//   loadTexture(textureid[6], "eppm/Edward_Kenway_Eye_D.ppm");
-//   loadTexture(textureid[7], "eppm/Edward_Kenway_Dagger2_D.ppm");
-//   loadTexture(textureid[8], "eppm/Edward_Kenway_Dagger1_D.ppm");
-//   loadTexture(textureid[9], "eppm/Edward_Kenway_Clothes3_D.ppm");
-//   loadTexture(textureid[10], "eppm/Edward_Kenway_Clothes2_D.ppm");
-//   loadTexture(textureid[11], "eppm/Edward_Kenway_Clothes1_D.ppm");
-
-//   loadTexture(textureid[0], "ppm/Connor_hand_D.ppm");
-//   loadTexture(textureid[1], "ppm/Connor_clothes4_D.ppm");
-//   loadTexture(textureid[2], "ppm/Connor_eye_D.ppm");
-//   loadTexture(textureid[3], "ppm/Connor_clothes2_D.ppm");
-//   loadTexture(textureid[4], "ppm/Connor_clothes1_D.ppm");
-//   loadTexture(textureid[5], "ppm/Connor_mouth_D.ppm");
-//   loadTexture(textureid[6], "ppm/Connor_head_D.ppm");
-//   loadTexture(textureid[7], "ppm/Connor_clothes3_D.ppm");
-//   loadTexture(textureid[8], "ppm/Connor_arm-blade_D.ppm");
 
    loadTexture(textureid[0], "appm/alduin.ppm");
    loadTexture(textureid[1], "appm/alduineyes.ppm");
+   loadTexture(textureid[2], "environmentppm/grass.ppm");
+   loadTexture(textureid[3], "environmentppm/sky.ppm");
+   loadTexture(textureid[4], "environmentppm/view-right.ppm");
+   loadTexture(textureid[5], "environmentppm/view-left.ppm");
+   loadTexture(textureid[6], "environmentppm/view-front.ppm");
+   loadTexture(textureid[7], "environmentppm/view-back.ppm");
 }
 
 int main(int argc, char **argv)
 {
-//    myObj = glmReadOBJ("Edward_Kenway.obj");
-//    myObj = glmReadOBJ("Connor_Kenway.obj");
     myObj = glmReadOBJ("alduin.obj");
 
     glmUnitize(myObj);
