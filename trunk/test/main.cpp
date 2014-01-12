@@ -26,6 +26,7 @@ are the same as the vertex values */
 #define PI 3.1415926535897
 
 GLMmodel *myObj = NULL;
+//GLMmodel *myObj2=NULL;
 int wave_mode = 0;
 GLint loc;
 GLhandleARB v,f,f2,p;
@@ -35,8 +36,8 @@ GLfloat light0_pos[]={0.0,0.0,1.0, 1.0};
 
 int width, height;
 int start_x, start_y;
-GLdouble theta = PI, phi = PI / 2;
-GLdouble eye_x = 0.5, eye_y = 0.0, eye_z = 0.0,
+GLdouble theta = -PI/2, phi = PI / 2;
+GLdouble eye_x = 0.0, eye_y = 0.2, eye_z = -0.35,
          center_x = eye_x + sin(phi) * cos(theta), center_y = eye_y + cos(phi), center_z = sin(phi) * sin(theta),
          up_x = 0.0, up_y = 1.0, up_z = 0.0;
 GLuint *textureid;
@@ -117,7 +118,8 @@ void drawOBJ()
     }
 }
 
-float eyex=0.5,eyey=0.0,eyez=0.0,turnhorizon=0.0,turnvertical=0.0,turnback=-1;
+//float eyex=0.5,eyey=0.0,eyez=0.0,turnhorizon=0.0,turnvertical=0.0,turnback=-1;
+//float eyex=0,eyey=0.2,eyez=-0.35,turnhorizon=0.0,turnvertical=0.0,turnback=-1;
 
 void display(void)
 {
@@ -138,92 +140,93 @@ void display(void)
     glBindTexture(GL_TEXTURE_2D, textureid[2]);
     glBegin( GL_QUADS ); //ground
         glTexCoord2f(0.0,0.0);
-		glVertex3f( 5.0, -0.43, 5.0 );
+		glVertex3f( 10.0, -0.43, 10.0 );
 
         glTexCoord2f(0.0,1.0);
-		glVertex3f( 5.0, -0.43, -5.0 );
+		glVertex3f( 10.0, -0.43, -10.0 );
 
         glTexCoord2f(1.0,1.0);
-		glVertex3f( -5.0, -0.43, -5.0 );
+		glVertex3f( -10.0, -0.43, -10.0 );
 
         glTexCoord2f(1.0,0.0);
-		glVertex3f( -5.0, -0.43, 5.0 );
+		glVertex3f( -10.0, -0.43, 10.0 );
 	glEnd();
 
     glBindTexture(GL_TEXTURE_2D, textureid[3]);
 	glBegin( GL_QUADS ); //sky
 		glTexCoord2f(0.0,0.0);
-		glVertex3f( 5.0, 4.43, 5.0 );
+		glVertex3f( 10.0, 14.43, 10.0 );
 
         glTexCoord2f(0.0,1.0);
-		glVertex3f( 5.0, 4.43, -5.0 );
+		glVertex3f( 10.0, 14.43, -10.0 );
 
         glTexCoord2f(1.0,1.0);
-		glVertex3f( -5.0, 4.43, -5.0 );
+		glVertex3f( -10.0, 14.43, -10.0 );
 
         glTexCoord2f(1.0,0.0);
-		glVertex3f( -5.0, 4.43, 5.0 );
+		glVertex3f( -10.0, 14.43, 10.0 );
 	glEnd();
 
 //    glDisable(GL_TEXTURE_2D);
+
     glBindTexture(GL_TEXTURE_2D, textureid[4]);
-    glBegin( GL_QUADS ); //right
+	glBegin( GL_QUADS ); //back
 		glTexCoord2f(0.0,1.0);
-		glVertex3f( 5.0, -0.43, 5.0 );
+		glVertex3f( -10.0, -0.43, 10.0 );
 
         glTexCoord2f(1.0,1.0);
-		glVertex3f( 5.0, -0.43, -5.0 );
+		glVertex3f( 10.0, -0.43, 10.0 );
 
         glTexCoord2f(1.0,0.0);
-        glVertex3f( 5.0, 4.43, -5.0 );
+        glVertex3f( 10.0, 14.43, 10.0 );
 
         glTexCoord2f(0.0,0.0);
-        glVertex3f( 5.0, 4.43, 5.0 );
+        glVertex3f( -10.0, 14.43, 10.0 );
 	glEnd();
 
     glBindTexture(GL_TEXTURE_2D, textureid[5]);
-	glBegin( GL_QUADS ); //left
+	glBegin( GL_QUADS ); //front
 		glTexCoord2f(0.0,1.0);
-		glVertex3f( -5.0, -0.43, 5.0 );
+		glVertex3f( -10.0, -0.43, -10.0 );
 
         glTexCoord2f(1.0,1.0);
-		glVertex3f( -5.0, -0.43, -5.0 );
+		glVertex3f( 10.0, -0.43, -10.0 );
 
         glTexCoord2f(1.0,0.0);
-        glVertex3f( -5.0, 4.43, -5.0 );
+        glVertex3f( 10.0, 14.43, -10.0 );
 
         glTexCoord2f(0.0,0.0);
-        glVertex3f( -5.0, 4.43, 5.0 );
+        glVertex3f( -10.0, 14.43, -10.0 );
 	glEnd();
 
     glBindTexture(GL_TEXTURE_2D, textureid[6]);
-	glBegin( GL_QUADS ); //front
+	glBegin( GL_QUADS ); //left
 		glTexCoord2f(0.0,1.0);
-		glVertex3f( -5.0, -0.43, -5.0 );
+		glVertex3f( -10.0, -0.43, 10.0 );
 
         glTexCoord2f(1.0,1.0);
-		glVertex3f( 5.0, -0.43, -5.0 );
+		glVertex3f( -10.0, -0.43, -10.0 );
 
         glTexCoord2f(1.0,0.0);
-        glVertex3f( 5.0, 4.43, -5.0 );
+        glVertex3f( -10.0, 14.43, -10.0 );
 
         glTexCoord2f(0.0,0.0);
-        glVertex3f( -5.0, 4.43, -5.0 );
+        glVertex3f( -10.0, 14.43, 10.0 );
 	glEnd();
 
-    glBindTexture(GL_TEXTURE_2D, textureid[7]);
-	glBegin( GL_QUADS ); //back
+	glBindTexture(GL_TEXTURE_2D, textureid[7]);
+    glBegin( GL_QUADS ); //right
 		glTexCoord2f(0.0,1.0);
-		glVertex3f( -5.0, -0.43, 5.0 );
+		glVertex3f( 10.0, -0.43, 10.0 );
 
         glTexCoord2f(1.0,1.0);
-		glVertex3f( 5.0, -0.43, 5.0 );
+		glVertex3f( 10.0, -0.43, -10.0 );
 
         glTexCoord2f(1.0,0.0);
-        glVertex3f( 5.0, 4.43, 5.0 );
+        glVertex3f( 10.0, 14.43, -10.0 );
 
         glTexCoord2f(0.0,0.0);
-        glVertex3f( -5.0, 4.43, 5.0 );
+        glVertex3f( 10.0, 14.43, 10.0 );
 	glEnd();
 
     glDisable(GL_TEXTURE_2D);
@@ -327,6 +330,13 @@ void keyboard(unsigned char key,int x,int y)
         light0_pos[2]=cos(light_theta);
     }
 
+//    if(key=='g')
+//    {
+//        eye_x = 0.0;
+//        eye_y = 0.2;
+//        eye_z = -0.35;
+//    }
+
     if(key==27)
     {
         exit(0);
@@ -368,7 +378,7 @@ void myReshape(int w, int h)
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     glViewport(0, 0, w, h);
-    gluPerspective(50.0, ratio, 0.01, 10.0);
+    gluPerspective(50.0, ratio, 0.01, 100000.0);
     glMatrixMode(GL_MODELVIEW);
 }
 
@@ -387,17 +397,17 @@ void loadTexture(GLuint textureid,char* filename)
 
 void init()
 {
-   textureid = new GLuint[myObj->numgroups-1];
-   glGenTextures(myObj->numgroups-1, textureid);
+   textureid = new GLuint[8];
+   glGenTextures(8, textureid);
 
    loadTexture(textureid[0], "appm/alduin.ppm");
    loadTexture(textureid[1], "appm/alduineyes.ppm");
    loadTexture(textureid[2], "environmentppm/grass.ppm");
    loadTexture(textureid[3], "environmentppm/sky.ppm");
-   loadTexture(textureid[4], "environmentppm/view-right.ppm");
-   loadTexture(textureid[5], "environmentppm/view-left.ppm");
-   loadTexture(textureid[6], "environmentppm/view-front.ppm");
-   loadTexture(textureid[7], "environmentppm/view-back.ppm");
+   loadTexture(textureid[4], "environmentppm/view-back.ppm");
+   loadTexture(textureid[5], "environmentppm/view-front.ppm");
+   loadTexture(textureid[6], "environmentppm/view-left.ppm");
+   loadTexture(textureid[7], "environmentppm/view-right.ppm");
 }
 
 int main(int argc, char **argv)
