@@ -390,6 +390,15 @@ void keyboard(unsigned char key,int x,int y)
         shader_mode=!shader_mode;
         setShaders();
     }
+    if(key == 'e' || key == 'E')
+    {
+        ridingMode = !ridingMode;
+        eye_x = 0.0;
+        eye_y = 0.2;
+        eye_z = -0.35;
+        theta = -PI/2;
+        phi = PI / 2;
+    }
 }
 
 void special(int key, int x, int y)
