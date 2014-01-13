@@ -155,79 +155,88 @@ void display(void)
     glBindTexture(GL_TEXTURE_2D, textureid[3]);
 	glBegin( GL_QUADS ); //sky
 		glTexCoord2f(0.0,0.0);
-		glVertex3f( 10.0, 14.43, 10.0 );
+		glVertex3f( 10.0, 9.0/*14.43*/, 10.0 );
 
         glTexCoord2f(0.0,1.0);
-		glVertex3f( 10.0, 14.43, -10.0 );
+		glVertex3f( 10.0, 9.0, -10.0 );
 
         glTexCoord2f(1.0,1.0);
-		glVertex3f( -10.0, 14.43, -10.0 );
+		glVertex3f( -10.0, 9.0, -10.0 );
 
         glTexCoord2f(1.0,0.0);
-		glVertex3f( -10.0, 14.43, 10.0 );
+		glVertex3f( -10.0, 9.0, 10.0 );
 	glEnd();
 
 //    glDisable(GL_TEXTURE_2D);
 
-    glBindTexture(GL_TEXTURE_2D, textureid[4]);
-	glBegin( GL_QUADS ); //back
-		glTexCoord2f(0.0,1.0);
-		glVertex3f( -10.0, -0.43, 10.0 );
+//    glBindTexture(GL_TEXTURE_2D, textureid[4]);
+//	glBegin( GL_QUADS ); //back
+//		glTexCoord2f(0.0,1.0);
+//		glVertex3f( -10.0, -0.43, 10.0 );
+//
+//        glTexCoord2f(1.0,1.0);
+//		glVertex3f( 10.0, -0.43, 10.0 );
+//
+//        glTexCoord2f(1.0,0.0);
+//        glVertex3f( 10.0, 14.43, 10.0 );
+//
+//        glTexCoord2f(0.0,0.0);
+//        glVertex3f( -10.0, 14.43, 10.0 );
+//	glEnd();
+//
+//    glBindTexture(GL_TEXTURE_2D, textureid[5]);
+//	glBegin( GL_QUADS ); //front
+//		glTexCoord2f(0.0,1.0);
+//		glVertex3f( -10.0, -0.43, -10.0 );
+//
+//        glTexCoord2f(1.0,1.0);
+//		glVertex3f( 10.0, -0.43, -10.0 );
+//
+//        glTexCoord2f(1.0,0.0);
+//        glVertex3f( 10.0, 14.43, -10.0 );
+//
+//        glTexCoord2f(0.0,0.0);
+//        glVertex3f( -10.0, 14.43, -10.0 );
+//	glEnd();
+//
+//    glBindTexture(GL_TEXTURE_2D, textureid[6]);
+//	glBegin( GL_QUADS ); //left
+//		glTexCoord2f(0.0,1.0);
+//		glVertex3f( -10.0, -0.43, 10.0 );
+//
+//        glTexCoord2f(1.0,1.0);
+//		glVertex3f( -10.0, -0.43, -10.0 );
+//
+//        glTexCoord2f(1.0,0.0);
+//        glVertex3f( -10.0, 14.43, -10.0 );
+//
+//        glTexCoord2f(0.0,0.0);
+//        glVertex3f( -10.0, 14.43, 10.0 );
+//	glEnd();
+//
+//	glBindTexture(GL_TEXTURE_2D, textureid[7]);
+//    glBegin( GL_QUADS ); //right
+//		glTexCoord2f(0.0,1.0);
+//		glVertex3f( 10.0, -0.43, 10.0 );
+//
+//        glTexCoord2f(1.0,1.0);
+//		glVertex3f( 10.0, -0.43, -10.0 );
+//
+//        glTexCoord2f(1.0,0.0);
+//        glVertex3f( 10.0, 14.43, -10.0 );
+//
+//        glTexCoord2f(0.0,0.0);
+//        glVertex3f( 10.0, 14.43, 10.0 );
+//	glEnd();
 
-        glTexCoord2f(1.0,1.0);
-		glVertex3f( 10.0, -0.43, 10.0 );
-
-        glTexCoord2f(1.0,0.0);
-        glVertex3f( 10.0, 14.43, 10.0 );
-
-        glTexCoord2f(0.0,0.0);
-        glVertex3f( -10.0, 14.43, 10.0 );
-	glEnd();
-
-    glBindTexture(GL_TEXTURE_2D, textureid[5]);
-	glBegin( GL_QUADS ); //front
-		glTexCoord2f(0.0,1.0);
-		glVertex3f( -10.0, -0.43, -10.0 );
-
-        glTexCoord2f(1.0,1.0);
-		glVertex3f( 10.0, -0.43, -10.0 );
-
-        glTexCoord2f(1.0,0.0);
-        glVertex3f( 10.0, 14.43, -10.0 );
-
-        glTexCoord2f(0.0,0.0);
-        glVertex3f( -10.0, 14.43, -10.0 );
-	glEnd();
-
-    glBindTexture(GL_TEXTURE_2D, textureid[6]);
-	glBegin( GL_QUADS ); //left
-		glTexCoord2f(0.0,1.0);
-		glVertex3f( -10.0, -0.43, 10.0 );
-
-        glTexCoord2f(1.0,1.0);
-		glVertex3f( -10.0, -0.43, -10.0 );
-
-        glTexCoord2f(1.0,0.0);
-        glVertex3f( -10.0, 14.43, -10.0 );
-
-        glTexCoord2f(0.0,0.0);
-        glVertex3f( -10.0, 14.43, 10.0 );
-	glEnd();
-
-	glBindTexture(GL_TEXTURE_2D, textureid[7]);
-    glBegin( GL_QUADS ); //right
-		glTexCoord2f(0.0,1.0);
-		glVertex3f( 10.0, -0.43, 10.0 );
-
-        glTexCoord2f(1.0,1.0);
-		glVertex3f( 10.0, -0.43, -10.0 );
-
-        glTexCoord2f(1.0,0.0);
-        glVertex3f( 10.0, 14.43, -10.0 );
-
-        glTexCoord2f(0.0,0.0);
-        glVertex3f( 10.0, 14.43, 10.0 );
-	glEnd();
+    //cylinder
+	GLUquadricObj* objCylinder = gluNewQuadric();
+	glRotatef(90, 1, 0, 0);
+	glTranslated(0.0, 0.0, -9.6);
+	glBindTexture(GL_TEXTURE_2D, textureid[4]);
+	gluQuadricTexture(objCylinder, true);
+    gluCylinder(objCylinder, 10.0/*buttom radius*/, 10.0/*top radius*/, 10.0/*height*/, 32, 5);
+    //
 
     glDisable(GL_TEXTURE_2D);
 
@@ -397,17 +406,18 @@ void loadTexture(GLuint textureid,char* filename)
 
 void init()
 {
-   textureid = new GLuint[8];
-   glGenTextures(8, textureid);
+    textureid = new GLuint[8];
+    glGenTextures(8, textureid);
 
-   loadTexture(textureid[0], "appm/alduin.ppm");
-   loadTexture(textureid[1], "appm/alduineyes.ppm");
-   loadTexture(textureid[2], "environmentppm/grass.ppm");
-   loadTexture(textureid[3], "environmentppm/sky.ppm");
-   loadTexture(textureid[4], "environmentppm/view-back.ppm");
-   loadTexture(textureid[5], "environmentppm/view-front.ppm");
-   loadTexture(textureid[6], "environmentppm/view-left.ppm");
-   loadTexture(textureid[7], "environmentppm/view-right.ppm");
+    loadTexture(textureid[0], "appm/alduin.ppm");
+    loadTexture(textureid[1], "appm/alduineyes.ppm");
+    loadTexture(textureid[2], "environmentppm/grass.ppm");
+    loadTexture(textureid[3], "environmentppm/sky.ppm");
+    loadTexture(textureid[4], "environmentppm/scene.ppm");
+//    loadTexture(textureid[4], "environmentppm/view-back.ppm");
+//    loadTexture(textureid[5], "environmentppm/view-front.ppm");
+//    loadTexture(textureid[6], "environmentppm/view-left.ppm");
+//    loadTexture(textureid[7], "environmentppm/view-right.ppm");
 }
 
 int main(int argc, char **argv)
