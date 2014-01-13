@@ -139,11 +139,11 @@ void display(void)
     gluLookAt(eye_x, eye_y, eye_z, center_x, center_y, center_z, up_x, up_y, up_z);
 
     glEnable(GL_TEXTURE_2D);
-    glTranslatef(0 - delta_x, -0.43 - delta_y, 0 - delta_z);
-    glRotatef(angle,0,1,0);
+//    glTranslatef(0 - delta_x, -0.43 - delta_y, 0 - delta_z);
+//    glRotatef(angle,0,1,0);
     drawOBJ();
 
-    glTranslatef(delta_x,delta_y,delta_z);
+    glTranslatef(delta_x, delta_y, delta_z);
     glRotatef(-angle,0,1,0);
 
     GLMgroup *groups = myObj->groups;
@@ -442,13 +442,27 @@ void special(int key, int x, int y)
         if(phi + 0.02 < PI) phi += 0.02;
     if(key == GLUT_KEY_LEFT) // turn left
     {
-        theta -= 0.1;
-        if(theta <= -2 * PI) theta += 2 * PI;
+        if(!ridingMode)
+        {
+            theta -= 0.1;
+            if(theta <= -2 * PI) theta += 2 * PI;
+        }
+        else
+        {
+            angle += 1;
+        }
     }
     if(key == GLUT_KEY_RIGHT) // turn right
     {
-        theta += 0.1;
-        if(theta >= 2 * PI) theta -= 2 * PI;
+        if(!ridingMode)
+        {
+            theta += 0.1;
+            if(theta >= 2 * PI) theta -= 2 * PI;
+        }
+        else
+        {
+            angle -= 1;
+        }
     }
     center_x = eye_x + sin(phi) * cos(theta);
     center_y = eye_y + cos(phi);
