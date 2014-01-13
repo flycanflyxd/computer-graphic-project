@@ -49,6 +49,9 @@ int t=0;
 bool inited = false;
 bool shader_mode=true;
 
+bool ridingMode = true;
+float delta_x = 0.0, delta_y = 0.0, delta_z = 0.0;
+
 void setShaders()
 {
 	char *vs = NULL,*fs = NULL;
@@ -138,6 +141,7 @@ void display(void)
     drawOBJ();
 
     glBindTexture(GL_TEXTURE_2D, textureid[2]);
+    glTranslatef(0 + delta_x, -0.43 + delta_y, 0 + delta_z);
     glBegin( GL_QUADS ); //ground
         glTexCoord2f(0.0,0.0);
 		glVertex3f( 10.0, -0.43, 10.0 );
@@ -277,45 +281,75 @@ void keyboard(unsigned char key,int x,int y)
         exit(0);
     if(key == 'w' || key == 'W') //move forward
     {
-        eye_x += 0.01 * sin(phi) * cos(theta);
-        eye_y += 0.01 * cos(phi);
-        eye_z += 0.01 * sin(phi) * sin(theta);
-        center_x += 0.01 * sin(phi) * cos(theta);
-        center_y += 0.01 * cos(phi);
-        center_z += 0.01 * sin(phi) * sin(theta);
+        if(!ridingMode)
+        {
+            eye_x += 0.01 * sin(phi) * cos(theta);
+            eye_y += 0.01 * cos(phi);
+            eye_z += 0.01 * sin(phi) * sin(theta);
+            center_x += 0.01 * sin(phi) * cos(theta);
+            center_y += 0.01 * cos(phi);
+            center_z += 0.01 * sin(phi) * sin(theta);
+        }
+        else
+            delta_z += 0.02;
     }
     if(key == 's' || key == 'S') //move backward
     {
-        eye_x -= 0.01 * sin(phi) * cos(theta);
-        eye_y -= 0.01 * cos(phi);
-        eye_z -= 0.01 * sin(phi) * sin(theta);
-        center_x -= 0.01 * sin(phi) * cos(theta);
-        center_y -= 0.01 * cos(phi);
-        center_z -= 0.01 * sin(phi) * sin(theta);
+        if(!ridingMode)
+        {
+            eye_x -= 0.01 * sin(phi) * cos(theta);
+            eye_y -= 0.01 * cos(phi);
+            eye_z -= 0.01 * sin(phi) * sin(theta);
+            center_x -= 0.01 * sin(phi) * cos(theta);
+            center_y -= 0.01 * cos(phi);
+            center_z -= 0.01 * sin(phi) * sin(theta);
+        }
+        else
+            delta_z -= 0.02;
     }
     if(key == 'a' || key == 'A') //move left
     {
-        eye_x += 0.01 * sin(phi) * sin(theta);
-        eye_z += -0.01 * sin(phi) * cos(theta);
-        center_x += 0.01 * sin(phi) * sin(theta);
-        center_z += -0.01 * sin(phi) * cos(theta);
+        if(!ridingMode)
+        {
+            eye_x += 0.01 * sin(phi) * sin(theta);
+            eye_z += -0.01 * sin(phi) * cos(theta);
+            center_x += 0.01 * sin(phi) * sin(theta);
+            center_z += -0.01 * sin(phi) * cos(theta);
+        }
+        else
+            delta_x += 0.02;
     }
     if(key == 'd' || key == 'D') //move right
     {
-        eye_x += -0.01 * sin(phi) * sin(theta);
-        eye_z += 0.01 * sin(phi) * cos(theta);
-        center_x += -0.01 * sin(phi) * sin(theta);
-        center_z += 0.01 * sin(phi) * cos(theta);
+        if(!ridingMode)
+        {
+            eye_x += -0.01 * sin(phi) * sin(theta);
+            eye_z += 0.01 * sin(phi) * cos(theta);
+            center_x += -0.01 * sin(phi) * sin(theta);
+            center_z += 0.01 * sin(phi) * cos(theta);
+        }
+        else
+            delta_x -= 0.02;
     }
     if(key == 'r' || key == 'R') // up
     {
-        eye_y += 0.01;
-        center_y += 0.01;
+        if(!ridingMode)
+        {
+            eye_y += 0.01;
+            center_y += 0.01;
+        }
+        else
+            delta_y -= 0.02;
     }
     if(key == 'f' || key == 'F') // down
     {
-        eye_y -= 0.01;
-        center_y -= 0.01;
+        if(!ridingMode)
+        {
+            eye_y -= 0.01;
+            center_y -= 0.01;
+        }
+        else
+            delta_y += 0.02;
     }
 
     if(key=='+')
