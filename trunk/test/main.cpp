@@ -51,6 +51,7 @@ bool shader_mode=true;
 
 bool ridingMode = true;
 float delta_x = 0.0, delta_y = 0.0, delta_z = 0.0;
+float angle=0;
 
 void setShaders()
 {
@@ -138,10 +139,34 @@ void display(void)
     gluLookAt(eye_x, eye_y, eye_z, center_x, center_y, center_z, up_x, up_y, up_z);
 
     glEnable(GL_TEXTURE_2D);
+    glTranslatef(0 - delta_x, -0.43 - delta_y, 0 - delta_z);
+    glRotatef(angle,0,1,0);
     drawOBJ();
 
+    glTranslatef(delta_x,delta_y,delta_z);
+    glRotatef(-angle,0,1,0);
+
+    GLMgroup *groups = myObj->groups;
+    int j=0;
+    while(groups)
+    {
+        glBindTexture(GL_TEXTURE_2D, textureid[j]);
+        glBegin(GL_TRIANGLES);
+        for(int i=0;i<groups->numtriangles;i+=1)
+        {
+            for (int v=0; v<3; v+=1)
+            {
+                //glNormal3fv(& myObj->vertices[myObj->triangles[groups->triangles[i]].nindices[v]*3 ]);
+                glTexCoord2fv(& myObj->texcoords[myObj->triangles[groups->triangles[i]].tindices[v]*2 ]);
+                glVertex3fv(& myObj->vertices[myObj->triangles[groups->triangles[i]].vindices[v]*3 ]);
+            }
+        }
+        groups=groups->next;
+        j+=1;
+        glEnd();
+    }
+
     glBindTexture(GL_TEXTURE_2D, textureid[2]);
-    glTranslatef(0 + delta_x, -0.43 + delta_y, 0 + delta_z);
     glBegin( GL_QUADS ); //ground
         glTexCoord2f(0.0,0.0);
 		glVertex3f( 10.0, -0.43, 10.0 );
@@ -354,23 +379,31 @@ void keyboard(unsigned char key,int x,int y)
 
     if(key=='+')
     {
-        light_theta+=PI/6;
-        if(light_theta>=PI*2)
+        if(ridingMode)
         {
-            light_theta-=PI*2;
+            angle+=0.2;
         }
-        light0_pos[1]=sin(light_theta);
-        light0_pos[2]=cos(light_theta);
+//        light_theta+=PI/6;
+//        if(light_theta>=PI*2)
+//        {
+//            light_theta-=PI*2;
+//        }
+//        light0_pos[1]=sin(light_theta);
+//        light0_pos[2]=cos(light_theta);
     }
     else if(key=='-')
     {
-        light_theta-=PI/6;
-        if(light_theta<=0)
+        if(ridingMode)
         {
-            light_theta+=PI*2;
+            angle-=0.2;
         }
-        light0_pos[1]=sin(light_theta);
-        light0_pos[2]=cos(light_theta);
+//        light_theta-=PI/6;
+//        if(light_theta<=0)
+//        {
+//            light_theta+=PI*2;
+//        }
+//        light0_pos[1]=sin(light_theta);
+//        light0_pos[2]=cos(light_theta);
     }
 
 //    if(key=='g')
