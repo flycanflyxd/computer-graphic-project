@@ -30,12 +30,12 @@ GLMmodel *myObj2 = NULL;
 GLMmodel *myObj3 = NULL;
 GLMmodel *myObj4 = NULL;
 
-int wave_mode = 0;
-GLint loc;
-GLhandleARB v,f,f2,p;
+//int wave_mode = 0;
+//GLint loc;
+//GLhandleARB v,f,f2,p;
 
-GLfloat light_theta=0.0;
-GLfloat light0_pos[]={0.0,0.0,1.0, 1.0};
+//GLfloat light_theta=0.0;
+//GLfloat light0_pos[]={0.0,0.0,1.0, 1.0};
 
 int width, height;
 int start_x, start_y;
@@ -56,6 +56,13 @@ bool shader_mode=true;
 bool ridingMode = false;
 float delta_x = 0.0, delta_y = 0.0, delta_z = 0.0;
 float angle=0;
+
+bool shader = false;
+GLdouble lightTheta = 10.0;
+GLfloat light0_pos[]={1.0, 0.0, 1.0, 1.0};
+GLfloat light0_ambient[] = {0.4, 0.4, 0.4, 1.0};
+GLfloat light0_diffuse[] = {0.7, 0.7, 0.7, 1.0};
+GLfloat light0_specular[] = {1.0, 1.0, 1.0, 1.0};
 
 void drawObj(GLMmodel *myObj,int j)
 {
@@ -80,6 +87,42 @@ void drawObj(GLMmodel *myObj,int j)
         j+=1;
         glEnd();
     }
+}
+
+void setShaders()
+{
+    GLhandleARB v = glCreateShaderObjectARB(GL_VERTEX_SHADER_ARB),
+                f = glCreateShaderObjectARB(GL_FRAGMENT_SHADER_ARB),
+                p;
+
+	char *vs = NULL, *fs = NULL;
+
+	vs = textFileRead("myshader.v");
+    fs = textFileRead("myshader.f");
+
+	const char * vv = vs;
+	const char * ff = fs;
+
+	glShaderSourceARB(v, 1, &vv, NULL);
+	glShaderSourceARB(f, 1, &ff, NULL);
+
+	free(vs);free(fs);
+
+	glCompileShaderARB(v);
+	glCompileShaderARB(f);
+
+    p = glCreateProgramObjectARB();
+	glAttachObjectARB(p,v);
+	glAttachObjectARB(p,f);
+
+	glLinkProgramARB(p);
+	glUseProgramObjectARB(p);
+
+    glUniform1iARB(glGetUniformLocationARB(p, "texture"), 0);
+    glUniform3fARB(glGetUniformLocationARB(p, "light"), light0_pos[0], light0_pos[1], light0_pos[2]);
+    glUniform4fARB(glGetUniformLocationARB(p, "l_ambient"), 0.4, 0.4, 0.4, 1.0 );
+    glUniform4fARB(glGetUniformLocationARB(p, "l_diffuse"), 0.7, 0.7, 0.7, 1.0 );
+    glUniform4fARB(glGetUniformLocationARB(p, "l_specular"), 1.0, 1.0, 1.0, 1.0 );
 }
 
 void drawtree(float x,float y,float z)
@@ -343,26 +386,26 @@ void keyboard(unsigned char key,int x,int y)
             delta_y += 0.2;
     }
 
-    if(key=='+')
-    {
-        light_theta+=PI/6;
-        if(light_theta>=PI*2)
-        {
-            light_theta-=PI*2;
-        }
-        light0_pos[1]=sin(light_theta);
-        light0_pos[2]=cos(light_theta);
-    }
-    else if(key=='-')
-    {
-        light_theta-=PI/6;
-        if(light_theta<=0)
-        {
-            light_theta+=PI*2;
-        }
-        light0_pos[1]=sin(light_theta);
-        light0_pos[2]=cos(light_theta);
-    }
+//    if(key=='+')
+//    {
+//        light_theta+=PI/6;
+//        if(light_theta>=PI*2)
+//        {
+//            light_theta-=PI*2;
+//        }
+//        light0_pos[1]=sin(light_theta);
+//        light0_pos[2]=cos(light_theta);
+//    }
+//    else if(key=='-')
+//    {
+//        light_theta-=PI/6;
+//        if(light_theta<=0)
+//        {
+//            light_theta+=PI*2;
+//        }
+//        light0_pos[1]=sin(light_theta);
+//        light0_pos[2]=cos(light_theta);
+//    }
 
 
     if(key==27)
@@ -378,6 +421,11 @@ void keyboard(unsigned char key,int x,int y)
         eye_z = -3.5;
         theta = -PI/2;
         phi = PI / 2;
+    }
+    if(key == 't' || key == 'T')
+    {
+        shader = !shader;
+        setShaders();
     }
 }
 
@@ -513,6 +561,7 @@ int main(int argc, char **argv)
     init();
 
 	glewInit();
+	//setShaders();
 
 	glutMainLoop();
     return 0;
