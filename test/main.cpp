@@ -26,7 +26,7 @@ are the same as the vertex values */
 #define PI 3.1415926535897
 
 GLMmodel *myObj = NULL;
-//GLMmodel *myObj2=NULL;
+GLMmodel *myObj2=NULL;
 int wave_mode = 0;
 GLint loc;
 GLhandleARB v,f,f2,p;
@@ -42,7 +42,7 @@ GLdouble eye_x = 0.0, eye_y = 0.2, eye_z = -0.35,
          up_x = 0.0, up_y = 1.0, up_z = 0.0;
 GLuint *textureid;
 //ColorImage texture[2]; //Alduin
-ColorImage texture[8]; //Alduin
+ColorImage texture[10]; //Alduin
 
 int t=0;
 
@@ -97,12 +97,12 @@ void setShaders()
 
 }
 
-void drawOBJ()
+void drawObj(GLMmodel *myObj,int j)
 {
     if (! myObj) return;
 
     GLMgroup *groups = myObj->groups;
-    int j=0;
+    //int j=0;
     while(groups)
     {
         glBindTexture(GL_TEXTURE_2D, textureid[j]);
@@ -120,6 +120,25 @@ void drawOBJ()
         j+=1;
         glEnd();
     }
+//    groups = myObj2->groups;
+//    j=5;
+//    while(groups)
+//    {
+//        glBindTexture(GL_TEXTURE_2D, textureid[j]);
+//        glBegin(GL_TRIANGLES);
+//        for(int i=0;i<groups->numtriangles;i+=1)
+//        {
+//            for (int v=0; v<3; v+=1)
+//            {
+//                //glNormal3fv(& myObj->vertices[myObj->triangles[groups->triangles[i]].nindices[v]*3 ]);
+//                glTexCoord2fv(& myObj2->texcoords[myObj2->triangles[groups->triangles[i]].tindices[v]*2 ]);
+//                glVertex3fv(& myObj2->vertices[myObj2->triangles[groups->triangles[i]].vindices[v]*3 ]);
+//            }
+//        }
+//        groups=groups->next;
+//        j+=1;
+//        glEnd();
+//    }
 }
 
 //float eyex=0.5,eyey=0.0,eyez=0.0,turnhorizon=0.0,turnvertical=0.0,turnback=-1;
@@ -141,30 +160,16 @@ void display(void)
     glEnable(GL_TEXTURE_2D);
 //    glTranslatef(0 - delta_x, -0.43 - delta_y, 0 - delta_z);
 //    glRotatef(angle,0,1,0);
-    drawOBJ();
+    drawObj(myObj,0);
 
     glTranslatef(delta_x, delta_y, delta_z);
     glRotatef(-angle,0,1,0);
 
-    GLMgroup *groups = myObj->groups;
-    int j=0;
-    while(groups)
-    {
-        glBindTexture(GL_TEXTURE_2D, textureid[j]);
-        glBegin(GL_TRIANGLES);
-        for(int i=0;i<groups->numtriangles;i+=1)
-        {
-            for (int v=0; v<3; v+=1)
-            {
-                //glNormal3fv(& myObj->vertices[myObj->triangles[groups->triangles[i]].nindices[v]*3 ]);
-                glTexCoord2fv(& myObj->texcoords[myObj->triangles[groups->triangles[i]].tindices[v]*2 ]);
-                glVertex3fv(& myObj->vertices[myObj->triangles[groups->triangles[i]].vindices[v]*3 ]);
-            }
-        }
-        groups=groups->next;
-        j+=1;
-        glEnd();
-    }
+    glTranslatef(3, 0.6, 0);
+    drawObj(myObj2,5);
+
+    glTranslatef(-3, -0.6, 0);
+    drawObj(myObj,0);
 
     glBindTexture(GL_TEXTURE_2D, textureid[2]);
     glBegin( GL_QUADS ); //ground
@@ -501,20 +506,29 @@ void init()
 
     loadTexture(textureid[0], "appm/alduin.ppm");
     loadTexture(textureid[1], "appm/alduineyes.ppm");
+
     loadTexture(textureid[2], "environmentppm/grass.ppm");
     loadTexture(textureid[3], "environmentppm/sky.ppm");
     loadTexture(textureid[4], "environmentppm/scene.ppm");
-//    loadTexture(textureid[4], "environmentppm/view-back.ppm");
-//    loadTexture(textureid[5], "environmentppm/view-front.ppm");
-//    loadTexture(textureid[6], "environmentppm/view-left.ppm");
-//    loadTexture(textureid[7], "environmentppm/view-right.ppm");
+
+    loadTexture(textureid[5], "kppm/Kenshiro_default_d.ppm");
+    loadTexture(textureid[6], "kppm/Kenshiro_hair_torso_d.ppm");
+    loadTexture(textureid[7], "kppm/Kenshiro_props_d.ppm");
+    loadTexture(textureid[8], "kppm/Kenshiro_default_d.ppm");
 }
 
 int main(int argc, char **argv)
 {
     myObj = glmReadOBJ("alduin.obj");
+    myObj2 = glmReadOBJ("Kenshiro_outfit_A.obj");
 
+//    while(myObj->groups)
+//    {
+//        printf("%s\n",myObj->groups->name);
+//        myObj->groups=myObj->groups->next;
+//    }
     glmUnitize(myObj);
+    glmUnitize(myObj2);
 
 	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
 	glutInitWindowSize(500,500);
