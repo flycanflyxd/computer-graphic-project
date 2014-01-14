@@ -39,7 +39,7 @@ GLfloat light0_pos[]={0.0,0.0,1.0, 1.0};
 int width, height;
 int start_x, start_y;
 GLdouble theta = -PI/2, phi = PI / 2;
-GLdouble eye_x = 0.0, eye_y = 0.2, eye_z = -0.35,
+GLdouble eye_x = 0.0, eye_y = 0.02, eye_z = -0.35,
          center_x = eye_x + sin(phi) * cos(theta), center_y = eye_y + cos(phi), center_z = sin(phi) * sin(theta),
          up_x = 0.0, up_y = 1.0, up_z = 0.0;
 GLuint *textureid;
@@ -163,21 +163,23 @@ void display(void)
     glEnable(GL_TEXTURE_2D);
 //    glTranslatef(0 - delta_x, -0.43 - delta_y, 0 - delta_z);
 //    glRotatef(angle,0,1,0);
+    glTranslatef(0.0, -0.18, 0.0);
     drawObj(myObj,0);
-
+    glTranslatef(0.0, 0.18, 0.0);
     glTranslatef(delta_x, delta_y, delta_z);
     glRotatef(-angle,0,1,0);
 
     glTranslatef(3, 0.6, 0);
     drawObj(myObj2,5);
-
     glTranslatef(-3, -0.6, 0);
 
     glTranslatef(-3, 0.6, 0);
     drawObj(myObj3,9);
-
     glTranslatef(3, -0.6, 0);
+
+    glTranslatef(0.0, -0.18, 0.0);
     drawObj(myObj,0);
+    glTranslatef(0.0, 0.18, 0.0);
 
     glBindTexture(GL_TEXTURE_2D, textureid[2]);
     glBegin( GL_QUADS ); //ground
