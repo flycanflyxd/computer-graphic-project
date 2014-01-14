@@ -119,6 +119,44 @@ void drawforest()
     }
 }
 
+void drawsoldier1(float x,float y,float z)
+{
+    glTranslatef(x, y, z);   //Kenshiro
+    drawObj(myObj2,5);
+    glTranslatef(-x, -y, -z);
+}
+
+void drawmilitary1()
+{
+    for(int i=0;i<5;i+=1)
+    {
+        drawsoldier1(15,0.6,0-2*i);
+    }
+    for(int i=0;i<5;i+=1)
+    {
+        drawsoldier1(13,0.6,0-2*i);
+    }
+}
+
+void drawsoldier2(float x,float y,float z)
+{
+    glTranslatef(x, y, z);    //Edward
+    drawObj(myObj3,9);
+    glTranslatef(-x, -y, -z);
+}
+
+void drawmilitary2()
+{
+    for(int i=0;i<5;i+=1)
+    {
+        drawsoldier2(-15,0.6,0-2*i);
+    }
+    for(int i=0;i<5;i+=1)
+    {
+        drawsoldier2(-13,0.6,0-2*i);
+    }
+}
+
 void display(void)
 {
     /* display callback, clear frame buffer and z buffer,
@@ -143,13 +181,9 @@ void display(void)
     glTranslatef(delta_x, delta_y, delta_z);
     glRotatef(-angle,0,1,0);
 
-    glTranslatef(15, 0.6, 0);    //Kenshiro
-    drawObj(myObj2,5);
-    glTranslatef(-15, -0.6, 0);
+    drawmilitary1();
 
-    glTranslatef(-15, 0.6, 0);    //Edward
-    drawObj(myObj3,9);
-    glTranslatef(15, -0.6, 0);
+    drawmilitary2();
 
     glTranslatef(0.0, 1.55, 0.0);    //Dragon
     glScalef(8,8,8);
