@@ -204,14 +204,25 @@ void display(void)
 {
     /* display callback, clear frame buffer and z buffer,
         rotate cube and draw, swap buffers */
-    glEnable(GL_LIGHTING);
-    glEnable(GL_LIGHT0);
-    glLightfv(GL_LIGHT0, GL_POSITION, light0_pos);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     gluLookAt(eye_x, eye_y, eye_z, center_x, center_y, center_z, up_x, up_y, up_z);
+
+    //lighting
+    glEnable(GL_LIGHTING);
+    glEnable(GL_LIGHT0);
+
+    light0_pos[0] = cos(lightTheta*PI/180.0);
+    light0_pos[1] = 1/sin(PI/4) * sin(lightTheta*PI/180.0);
+    light0_pos[2] = cos(lightTheta*PI/180.0);
+
+    glLightfv(GL_LIGHT0, GL_AMBIENT, light0_ambient);
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, light0_diffuse);
+    glLightfv(GL_LIGHT0, GL_SPECULAR, light0_specular);
+    glLightfv(GL_LIGHT0, GL_POSITION, light0_pos);
+    //
 
     glEnable(GL_TEXTURE_2D);
 
@@ -386,26 +397,28 @@ void keyboard(unsigned char key,int x,int y)
             delta_y += 0.2;
     }
 
-//    if(key=='+')
-//    {
-//        light_theta+=PI/6;
-//        if(light_theta>=PI*2)
+    if(key=='+')
+    {
+        lightTheta += 10.0;
+//        lightTheta+=PI/6;
+//        if(lightTheta>=PI*2)
 //        {
-//            light_theta-=PI*2;
+//            lightTheta-=PI*2;
 //        }
-//        light0_pos[1]=sin(light_theta);
-//        light0_pos[2]=cos(light_theta);
-//    }
-//    else if(key=='-')
-//    {
-//        light_theta-=PI/6;
-//        if(light_theta<=0)
+//        light0_pos[1]=sin(lightTheta);
+//        light0_pos[2]=cos(lightTheta);
+    }
+    else if(key=='-')
+    {
+        lightTheta -= 10.0;
+//        lightTheta-=PI/6;
+//        if(lightTheta<=0)
 //        {
-//            light_theta+=PI*2;
+//            lightTheta+=PI*2;
 //        }
-//        light0_pos[1]=sin(light_theta);
-//        light0_pos[2]=cos(light_theta);
-//    }
+//        light0_pos[1]=sin(lightTheta);
+//        light0_pos[2]=cos(lightTheta);
+    }
 
 
     if(key==27)
@@ -425,7 +438,10 @@ void keyboard(unsigned char key,int x,int y)
     if(key == 't' || key == 'T')
     {
         shader = !shader;
-        setShaders();
+        if(shader)
+        {
+            setShaders();
+        }
     }
 }
 
@@ -561,7 +577,10 @@ int main(int argc, char **argv)
     init();
 
 	glewInit();
-	//setShaders();
+	if(shader)
+	{
+	    setShaders();
+	}
 
 	glutMainLoop();
     return 0;
