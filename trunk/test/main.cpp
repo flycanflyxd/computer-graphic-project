@@ -26,7 +26,9 @@ are the same as the vertex values */
 #define PI 3.1415926535897
 
 GLMmodel *myObj = NULL;
-GLMmodel *myObj2=NULL;
+GLMmodel *myObj2 = NULL;
+GLMmodel *myObj3 = NULL;
+
 int wave_mode = 0;
 GLint loc;
 GLhandleARB v,f,f2,p;
@@ -41,8 +43,9 @@ GLdouble eye_x = 0.0, eye_y = 0.2, eye_z = -0.35,
          center_x = eye_x + sin(phi) * cos(theta), center_y = eye_y + cos(phi), center_z = sin(phi) * sin(theta),
          up_x = 0.0, up_y = 1.0, up_z = 0.0;
 GLuint *textureid;
+int number=21;
 //ColorImage texture[2]; //Alduin
-ColorImage texture[10]; //Alduin
+ColorImage texture[21]; //Alduin
 
 int t=0;
 
@@ -169,6 +172,11 @@ void display(void)
     drawObj(myObj2,5);
 
     glTranslatef(-3, -0.6, 0);
+
+    glTranslatef(-3, 0.6, 0);
+    drawObj(myObj3,9);
+
+    glTranslatef(3, -0.6, 0);
     drawObj(myObj,0);
 
     glBindTexture(GL_TEXTURE_2D, textureid[2]);
@@ -501,8 +509,8 @@ void loadTexture(GLuint textureid,char* filename)
 
 void init()
 {
-    textureid = new GLuint[8];
-    glGenTextures(8, textureid);
+    textureid = new GLuint[number];
+    glGenTextures(number, textureid);
 
     loadTexture(textureid[0], "appm/alduin.ppm");
     loadTexture(textureid[1], "appm/alduineyes.ppm");
@@ -515,20 +523,35 @@ void init()
     loadTexture(textureid[6], "kppm/Kenshiro_hair_torso_d.ppm");
     loadTexture(textureid[7], "kppm/Kenshiro_props_d.ppm");
     loadTexture(textureid[8], "kppm/Kenshiro_default_d.ppm");
+
+    loadTexture(textureid[9], "eppm/Edward_Kenway_Necklace_D.ppm");
+    loadTexture(textureid[10], "eppm/Edward_Kenway_Mouth_D.ppm");
+    loadTexture(textureid[11], "eppm/Edward_Kenway_Head_D.ppm");
+    loadTexture(textureid[12], "eppm/Edward_Kenway_Arms_D.ppm");
+    loadTexture(textureid[13], "eppm/Edward_Kenway_Hair_D.ppm");
+    loadTexture(textureid[14], "eppm/Edward_Kenway_Eye_Reflection_D.ppm");
+    loadTexture(textureid[15], "eppm/Edward_Kenway_Eye_D.ppm");
+    loadTexture(textureid[16], "eppm/Edward_Kenway_Dagger2_D.ppm");
+    loadTexture(textureid[17], "eppm/Edward_Kenway_Dagger1_D.ppm");
+    loadTexture(textureid[18], "eppm/Edward_Kenway_Clothes3_D.ppm");
+    loadTexture(textureid[19], "eppm/Edward_Kenway_Clothes2_D.ppm");
+    loadTexture(textureid[20], "eppm/Edward_Kenway_Clothes1_D.ppm");
 }
 
 int main(int argc, char **argv)
 {
     myObj = glmReadOBJ("alduin.obj");
     myObj2 = glmReadOBJ("Kenshiro_outfit_A.obj");
+    myObj3 = glmReadOBJ("Edward_Kenway.obj");
 
-//    while(myObj->groups)
+//    while(myObj3->groups)
 //    {
-//        printf("%s\n",myObj->groups->name);
-//        myObj->groups=myObj->groups->next;
+//        printf("%s\n",myObj3->groups->name);
+//        myObj3->groups=myObj3->groups->next;
 //    }
     glmUnitize(myObj);
     glmUnitize(myObj2);
+    glmUnitize(myObj3);
 
 	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
 	glutInitWindowSize(500,500);
