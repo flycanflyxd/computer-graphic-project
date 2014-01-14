@@ -52,7 +52,7 @@ int t=0;
 bool inited = false;
 bool shader_mode=true;
 
-bool ridingMode = true;
+bool ridingMode = false;
 float delta_x = 0.0, delta_y = 0.0, delta_z = 0.0;
 float angle=0;
 
