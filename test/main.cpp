@@ -39,8 +39,8 @@ GLfloat light0_pos[]={0.0,0.0,1.0, 1.0};
 int width, height;
 int start_x, start_y;
 GLdouble theta = -PI/2, phi = PI / 2;
-GLdouble eye_x = 0.0, eye_y = 0.02, eye_z = -0.35,
-         center_x = eye_x + sin(phi) * cos(theta), center_y = eye_y + cos(phi), center_z = sin(phi) * sin(theta),
+GLdouble eye_x = 0.0, eye_y = 3, eye_z = -3.5,
+         center_x = eye_x + sin(phi) * cos(theta), center_y = eye_y + cos(phi), center_z = 4*sin(phi) * sin(theta),
          up_x = 0.0, up_y = 1.0, up_z = 0.0;
 GLuint *textureid;
 int number=21;
@@ -56,50 +56,6 @@ bool ridingMode = true;
 float delta_x = 0.0, delta_y = 0.0, delta_z = 0.0;
 float angle=0;
 
-void setShaders()
-{
-	char *vs = NULL,*fs = NULL;
-
-	if (! inited) {
-		v = glCreateShaderObjectARB(GL_VERTEX_SHADER_ARB);
-		f = glCreateShaderObjectARB(GL_FRAGMENT_SHADER_ARB);
-	}
-
-    vs = textFileRead("toon.vert");
-    fs = textFileRead("diffuse.frag");
-//    if (shader_mode)
-//    {
-//        fs = textFileRead("toon.frag");
-//	}
-//	else
-//    {
-//        fs = textFileRead("diffuse.frag");
-//    }
-
-    const char * vv = vs;
-	const char * ff = fs;
-	glShaderSourceARB(v, 1, &vv,NULL);
-	glShaderSourceARB(f, 1, &ff,NULL);
-
-	free(vs);free(fs);
-
-	glCompileShaderARB(v);
-	glCompileShaderARB(f);
-
-	if (! inited) {
-		p = glCreateProgramObjectARB();
-	}
-	glAttachObjectARB(p,v);
-	glAttachObjectARB(p,f);
-
-	glLinkProgramARB(p);
-
-	glUseProgramObjectARB(p);
-
-	loc = glGetUniformLocationARB(p, "angle");
-
-}
-
 void drawObj(GLMmodel *myObj,int j)
 {
     if (! myObj) return;
@@ -114,7 +70,7 @@ void drawObj(GLMmodel *myObj,int j)
         {
             for (int v=0; v<3; v+=1)
             {
-                //glNormal3fv(& myObj->vertices[myObj->triangles[groups->triangles[i]].nindices[v]*3 ]);
+//                glNormal3fv(& myObj->vertices[myObj->triangles[groups->triangles[i]].nindices[v]*3 ]);
                 glTexCoord2fv(& myObj->texcoords[myObj->triangles[groups->triangles[i]].tindices[v]*2 ]);
                 glVertex3fv(& myObj->vertices[myObj->triangles[groups->triangles[i]].vindices[v]*3 ]);
             }
@@ -123,29 +79,7 @@ void drawObj(GLMmodel *myObj,int j)
         j+=1;
         glEnd();
     }
-//    groups = myObj2->groups;
-//    j=5;
-//    while(groups)
-//    {
-//        glBindTexture(GL_TEXTURE_2D, textureid[j]);
-//        glBegin(GL_TRIANGLES);
-//        for(int i=0;i<groups->numtriangles;i+=1)
-//        {
-//            for (int v=0; v<3; v+=1)
-//            {
-//                //glNormal3fv(& myObj->vertices[myObj->triangles[groups->triangles[i]].nindices[v]*3 ]);
-//                glTexCoord2fv(& myObj2->texcoords[myObj2->triangles[groups->triangles[i]].tindices[v]*2 ]);
-//                glVertex3fv(& myObj2->vertices[myObj2->triangles[groups->triangles[i]].vindices[v]*3 ]);
-//            }
-//        }
-//        groups=groups->next;
-//        j+=1;
-//        glEnd();
-//    }
 }
-
-//float eyex=0.5,eyey=0.0,eyez=0.0,turnhorizon=0.0,turnvertical=0.0,turnback=-1;
-//float eyex=0,eyey=0.2,eyez=-0.35,turnhorizon=0.0,turnvertical=0.0,turnback=-1;
 
 void display(void)
 {
@@ -161,26 +95,32 @@ void display(void)
     gluLookAt(eye_x, eye_y, eye_z, center_x, center_y, center_z, up_x, up_y, up_z);
 
     glEnable(GL_TEXTURE_2D);
-//    glTranslatef(0 - delta_x, -0.43 - delta_y, 0 - delta_z);
-//    glRotatef(angle,0,1,0);
-    glTranslatef(0.0, -0.18, 0.0);
+
+    glTranslatef(0.0, 1.55, 0.0);
+    glScalef(8,8,8);
     drawObj(myObj,0);
-    glTranslatef(0.0, 0.18, 0.0);
+    glScalef(0.125,0.125,0.125);
+    glTranslatef(0.0, -1.55, 0.0);
+
     glTranslatef(delta_x, delta_y, delta_z);
     glRotatef(-angle,0,1,0);
 
-    glTranslatef(3, 0.6, 0);
+    glTranslatef(15, 0.6, 0);
     drawObj(myObj2,5);
-    glTranslatef(-3, -0.6, 0);
+    glTranslatef(-15, -0.6, 0);
 
-    glTranslatef(-3, 0.6, 0);
+    glTranslatef(-15, 0.6, 0);
     drawObj(myObj3,9);
-    glTranslatef(3, -0.6, 0);
+    glTranslatef(15, -0.6, 0);
 
-    glTranslatef(0.0, -0.18, 0.0);
+    glTranslatef(0.0, 1.55, 0.0);
+    glScalef(8,8,8);
     drawObj(myObj,0);
-    glTranslatef(0.0, 0.18, 0.0);
+    glScalef(0.125,0.125,0.125);
+    glTranslatef(0.0, -1.55, 0.0);
 
+    glScalef(8,8,8);
+    glTranslatef(0.0, 0.375, 0.0);
     glBindTexture(GL_TEXTURE_2D, textureid[2]);
     glBegin( GL_QUADS ); //ground
         glTexCoord2f(0.0,0.0);
@@ -211,68 +151,6 @@ void display(void)
 		glVertex3f( -10.0, 9.0, 10.0 );
 	glEnd();
 
-//    glDisable(GL_TEXTURE_2D);
-
-//    glBindTexture(GL_TEXTURE_2D, textureid[4]);
-//	glBegin( GL_QUADS ); //back
-//		glTexCoord2f(0.0,1.0);
-//		glVertex3f( -10.0, -0.43, 10.0 );
-//
-//        glTexCoord2f(1.0,1.0);
-//		glVertex3f( 10.0, -0.43, 10.0 );
-//
-//        glTexCoord2f(1.0,0.0);
-//        glVertex3f( 10.0, 14.43, 10.0 );
-//
-//        glTexCoord2f(0.0,0.0);
-//        glVertex3f( -10.0, 14.43, 10.0 );
-//	glEnd();
-//
-//    glBindTexture(GL_TEXTURE_2D, textureid[5]);
-//	glBegin( GL_QUADS ); //front
-//		glTexCoord2f(0.0,1.0);
-//		glVertex3f( -10.0, -0.43, -10.0 );
-//
-//        glTexCoord2f(1.0,1.0);
-//		glVertex3f( 10.0, -0.43, -10.0 );
-//
-//        glTexCoord2f(1.0,0.0);
-//        glVertex3f( 10.0, 14.43, -10.0 );
-//
-//        glTexCoord2f(0.0,0.0);
-//        glVertex3f( -10.0, 14.43, -10.0 );
-//	glEnd();
-//
-//    glBindTexture(GL_TEXTURE_2D, textureid[6]);
-//	glBegin( GL_QUADS ); //left
-//		glTexCoord2f(0.0,1.0);
-//		glVertex3f( -10.0, -0.43, 10.0 );
-//
-//        glTexCoord2f(1.0,1.0);
-//		glVertex3f( -10.0, -0.43, -10.0 );
-//
-//        glTexCoord2f(1.0,0.0);
-//        glVertex3f( -10.0, 14.43, -10.0 );
-//
-//        glTexCoord2f(0.0,0.0);
-//        glVertex3f( -10.0, 14.43, 10.0 );
-//	glEnd();
-//
-//	glBindTexture(GL_TEXTURE_2D, textureid[7]);
-//    glBegin( GL_QUADS ); //right
-//		glTexCoord2f(0.0,1.0);
-//		glVertex3f( 10.0, -0.43, 10.0 );
-//
-//        glTexCoord2f(1.0,1.0);
-//		glVertex3f( 10.0, -0.43, -10.0 );
-//
-//        glTexCoord2f(1.0,0.0);
-//        glVertex3f( 10.0, 14.43, -10.0 );
-//
-//        glTexCoord2f(0.0,0.0);
-//        glVertex3f( 10.0, 14.43, 10.0 );
-//	glEnd();
-
     //cylinder
 	GLUquadricObj* objCylinder = gluNewQuadric();
 	glRotatef(90, 1, 0, 0);
@@ -280,7 +158,6 @@ void display(void)
 	glBindTexture(GL_TEXTURE_2D, textureid[4]);
 	gluQuadricTexture(objCylinder, true);
     gluCylinder(objCylinder, 10.0/*buttom radius*/, 10.0/*top radius*/, 10.0/*height*/, 32, 5);
-    //
 
     glDisable(GL_TEXTURE_2D);
 
@@ -394,56 +271,37 @@ void keyboard(unsigned char key,int x,int y)
 
     if(key=='+')
     {
-        if(ridingMode)
+        light_theta+=PI/6;
+        if(light_theta>=PI*2)
         {
-            angle+=0.2;
+            light_theta-=PI*2;
         }
-//        light_theta+=PI/6;
-//        if(light_theta>=PI*2)
-//        {
-//            light_theta-=PI*2;
-//        }
-//        light0_pos[1]=sin(light_theta);
-//        light0_pos[2]=cos(light_theta);
+        light0_pos[1]=sin(light_theta);
+        light0_pos[2]=cos(light_theta);
     }
     else if(key=='-')
     {
-        if(ridingMode)
+        light_theta-=PI/6;
+        if(light_theta<=0)
         {
-            angle-=0.2;
+            light_theta+=PI*2;
         }
-//        light_theta-=PI/6;
-//        if(light_theta<=0)
-//        {
-//            light_theta+=PI*2;
-//        }
-//        light0_pos[1]=sin(light_theta);
-//        light0_pos[2]=cos(light_theta);
+        light0_pos[1]=sin(light_theta);
+        light0_pos[2]=cos(light_theta);
     }
 
-//    if(key=='g')
-//    {
-//        eye_x = 0.0;
-//        eye_y = 0.2;
-//        eye_z = -0.35;
-//    }
 
     if(key==27)
     {
         exit(0);
     }
 
-    if(key=='t' || key=='T')
-    {
-        shader_mode=!shader_mode;
-        setShaders();
-    }
     if(key == 'e' || key == 'E')
     {
         ridingMode = !ridingMode;
         eye_x = 0.0;
-        eye_y = 0.2;
-        eye_z = -0.35;
+        eye_y = 3;
+        eye_z = -3.5;
         theta = -PI/2;
         phi = PI / 2;
     }
@@ -492,7 +350,7 @@ void myReshape(int w, int h)
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     glViewport(0, 0, w, h);
-    gluPerspective(50.0, ratio, 0.01, 100000.0);
+    gluPerspective(50.0, ratio, 0.1, 100000.0);
     glMatrixMode(GL_MODELVIEW);
 }
 
@@ -531,7 +389,8 @@ void init()
     loadTexture(textureid[11], "eppm/Edward_Kenway_Head_D.ppm");
     loadTexture(textureid[12], "eppm/Edward_Kenway_Arms_D.ppm");
     loadTexture(textureid[13], "eppm/Edward_Kenway_Hair_D.ppm");
-    loadTexture(textureid[14], "eppm/Edward_Kenway_Eye_Reflection_D.ppm");
+    loadTexture(textureid[14], "eppm/Edward_Kenway_Eye_D.ppm");
+//    loadTexture(textureid[14], "eppm/Edward_Kenway_Eye_Reflection_D.ppm");
     loadTexture(textureid[15], "eppm/Edward_Kenway_Eye_D.ppm");
     loadTexture(textureid[16], "eppm/Edward_Kenway_Dagger2_D.ppm");
     loadTexture(textureid[17], "eppm/Edward_Kenway_Dagger1_D.ppm");
