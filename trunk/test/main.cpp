@@ -28,6 +28,7 @@ are the same as the vertex values */
 GLMmodel *myObj = NULL;
 GLMmodel *myObj2 = NULL;
 GLMmodel *myObj3 = NULL;
+GLMmodel *myObj4 = NULL;
 
 int wave_mode = 0;
 GLint loc;
@@ -43,9 +44,9 @@ GLdouble eye_x = 0.0, eye_y = 3, eye_z = -3.5,
          center_x = eye_x + sin(phi) * cos(theta), center_y = eye_y + cos(phi), center_z = 4*sin(phi) * sin(theta),
          up_x = 0.0, up_y = 1.0, up_z = 0.0;
 GLuint *textureid;
-int number=21;
+int number=23;
 //ColorImage texture[2]; //Alduin
-ColorImage texture[21]; //Alduin
+ColorImage texture[23]; //Alduin
 
 int t=0;
 
@@ -81,6 +82,43 @@ void drawObj(GLMmodel *myObj,int j)
     }
 }
 
+void drawtree(float x,float y,float z)
+{
+    glTranslatef(x, y, z); //Tree
+    glScalef(2,2,2);
+    drawObj(myObj4,21);
+    glScalef(0.5,0.5,0.5);
+    glTranslatef(-x, -y, -z);
+}
+
+void drawforest()
+{
+    for(int i=0;i<20;i+=1)
+    {
+        drawtree(20-2*i,1.55,40);
+    }
+    for(int i=0;i<20;i+=1)
+    {
+        drawtree(19-2*i,1.55,37);
+    }
+    for(int i=0;i<20;i+=1)
+    {
+        drawtree(18-2*i,1.55,34);
+    }
+    for(int i=0;i<20;i+=1)
+    {
+        drawtree(17-2*i,1.55,31);
+    }
+    for(int i=0;i<20;i+=1)
+    {
+        drawtree(16-2*i,1.55,28);
+    }
+    for(int i=0;i<20;i+=1)
+    {
+        drawtree(15-2*i,1.55,25);
+    }
+}
+
 void display(void)
 {
     /* display callback, clear frame buffer and z buffer,
@@ -96,7 +134,7 @@ void display(void)
 
     glEnable(GL_TEXTURE_2D);
 
-    glTranslatef(0.0, 1.55, 0.0);
+    glTranslatef(0.0, 1.55, 0.0);   //moveable Dragon
     glScalef(8,8,8);
     drawObj(myObj,0);
     glScalef(0.125,0.125,0.125);
@@ -105,21 +143,23 @@ void display(void)
     glTranslatef(delta_x, delta_y, delta_z);
     glRotatef(-angle,0,1,0);
 
-    glTranslatef(15, 0.6, 0);
+    glTranslatef(15, 0.6, 0);    //Kenshiro
     drawObj(myObj2,5);
     glTranslatef(-15, -0.6, 0);
 
-    glTranslatef(-15, 0.6, 0);
+    glTranslatef(-15, 0.6, 0);    //Edward
     drawObj(myObj3,9);
     glTranslatef(15, -0.6, 0);
 
-    glTranslatef(0.0, 1.55, 0.0);
+    glTranslatef(0.0, 1.55, 0.0);    //Dragon
     glScalef(8,8,8);
     drawObj(myObj,0);
     glScalef(0.125,0.125,0.125);
     glTranslatef(0.0, -1.55, 0.0);
 
-    glScalef(8,8,8);
+    drawforest();
+
+    glScalef(8,8,8);    //environment
     glTranslatef(0.0, 0.375, 0.0);
     glBindTexture(GL_TEXTURE_2D, textureid[2]);
     glBegin( GL_QUADS ); //ground
@@ -200,73 +240,73 @@ void keyboard(unsigned char key,int x,int y)
     {
         if(!ridingMode)
         {
-            eye_x += 0.01 * sin(phi) * cos(theta);
-            eye_y += 0.01 * cos(phi);
-            eye_z += 0.01 * sin(phi) * sin(theta);
-            center_x += 0.01 * sin(phi) * cos(theta);
-            center_y += 0.01 * cos(phi);
-            center_z += 0.01 * sin(phi) * sin(theta);
+            eye_x += 0.1 * sin(phi) * cos(theta);
+            eye_y += 0.1 * cos(phi);
+            eye_z += 0.1 * sin(phi) * sin(theta);
+            center_x += 0.1 * sin(phi) * cos(theta);
+            center_y += 0.1 * cos(phi);
+            center_z += 0.1 * sin(phi) * sin(theta);
         }
         else
-            delta_z += 0.02;
+            delta_z += 0.2;
     }
     if(key == 's' || key == 'S') //move backward
     {
         if(!ridingMode)
         {
-            eye_x -= 0.01 * sin(phi) * cos(theta);
-            eye_y -= 0.01 * cos(phi);
-            eye_z -= 0.01 * sin(phi) * sin(theta);
-            center_x -= 0.01 * sin(phi) * cos(theta);
-            center_y -= 0.01 * cos(phi);
-            center_z -= 0.01 * sin(phi) * sin(theta);
+            eye_x -= 0.1 * sin(phi) * cos(theta);
+            eye_y -= 0.1 * cos(phi);
+            eye_z -= 0.1 * sin(phi) * sin(theta);
+            center_x -= 0.1 * sin(phi) * cos(theta);
+            center_y -= 0.1 * cos(phi);
+            center_z -= 0.1 * sin(phi) * sin(theta);
         }
         else
-            delta_z -= 0.02;
+            delta_z -= 0.2;
     }
     if(key == 'a' || key == 'A') //move left
     {
         if(!ridingMode)
         {
-            eye_x += 0.01 * sin(phi) * sin(theta);
-            eye_z += -0.01 * sin(phi) * cos(theta);
-            center_x += 0.01 * sin(phi) * sin(theta);
-            center_z += -0.01 * sin(phi) * cos(theta);
+            eye_x += 0.1 * sin(phi) * sin(theta);
+            eye_z += -0.1 * sin(phi) * cos(theta);
+            center_x += 0.1 * sin(phi) * sin(theta);
+            center_z += -0.1 * sin(phi) * cos(theta);
         }
         else
-            delta_x += 0.02;
+            delta_x += 0.2;
     }
     if(key == 'd' || key == 'D') //move right
     {
         if(!ridingMode)
         {
-            eye_x += -0.01 * sin(phi) * sin(theta);
-            eye_z += 0.01 * sin(phi) * cos(theta);
-            center_x += -0.01 * sin(phi) * sin(theta);
-            center_z += 0.01 * sin(phi) * cos(theta);
+            eye_x += -0.1 * sin(phi) * sin(theta);
+            eye_z += 0.1 * sin(phi) * cos(theta);
+            center_x += -0.1 * sin(phi) * sin(theta);
+            center_z += 0.1 * sin(phi) * cos(theta);
         }
         else
-            delta_x -= 0.02;
+            delta_x -= 0.2;
     }
     if(key == 'r' || key == 'R') // up
     {
         if(!ridingMode)
         {
-            eye_y += 0.01;
-            center_y += 0.01;
+            eye_y += 0.1;
+            center_y += 0.1;
         }
         else
-            delta_y -= 0.02;
+            delta_y -= 0.2;
     }
     if(key == 'f' || key == 'F') // down
     {
         if(!ridingMode)
         {
-            eye_y -= 0.01;
-            center_y -= 0.01;
+            eye_y -= 0.1;
+            center_y -= 0.1;
         }
         else
-            delta_y += 0.02;
+            delta_y += 0.2;
     }
 
     if(key=='+')
@@ -372,18 +412,22 @@ void init()
     textureid = new GLuint[number];
     glGenTextures(number, textureid);
 
+    printf("Load Dragron texture\n");
     loadTexture(textureid[0], "appm/alduin.ppm");
     loadTexture(textureid[1], "appm/alduineyes.ppm");
 
+    printf("\nLoad environment texture\n");
     loadTexture(textureid[2], "environmentppm/grass.ppm");
     loadTexture(textureid[3], "environmentppm/sky.ppm");
     loadTexture(textureid[4], "environmentppm/scene.ppm");
 
+    printf("Load Kenshiro texture\n");
     loadTexture(textureid[5], "kppm/Kenshiro_default_d.ppm");
     loadTexture(textureid[6], "kppm/Kenshiro_hair_torso_d.ppm");
     loadTexture(textureid[7], "kppm/Kenshiro_props_d.ppm");
     loadTexture(textureid[8], "kppm/Kenshiro_default_d.ppm");
 
+    printf("\nLoad Edward texture\n");
     loadTexture(textureid[9], "eppm/Edward_Kenway_Necklace_D.ppm");
     loadTexture(textureid[10], "eppm/Edward_Kenway_Mouth_D.ppm");
     loadTexture(textureid[11], "eppm/Edward_Kenway_Head_D.ppm");
@@ -397,6 +441,10 @@ void init()
     loadTexture(textureid[18], "eppm/Edward_Kenway_Clothes3_D.ppm");
     loadTexture(textureid[19], "eppm/Edward_Kenway_Clothes2_D.ppm");
     loadTexture(textureid[20], "eppm/Edward_Kenway_Clothes1_D.ppm");
+
+    printf("\nLoad Tree texture\n");
+    loadTexture(textureid[21], "tppm/palm_leaf_d.ppm");
+    loadTexture(textureid[22], "tppm/palm_trunk_d.ppm");
 }
 
 int main(int argc, char **argv)
@@ -404,15 +452,17 @@ int main(int argc, char **argv)
     myObj = glmReadOBJ("alduin.obj");
     myObj2 = glmReadOBJ("Kenshiro_outfit_A.obj");
     myObj3 = glmReadOBJ("Edward_Kenway.obj");
+    myObj4 = glmReadOBJ("palm_tree.obj");
 
-//    while(myObj3->groups)
+//    while(myObj4->groups)
 //    {
-//        printf("%s\n",myObj3->groups->name);
-//        myObj3->groups=myObj3->groups->next;
+//        printf("%s\n",myObj4->groups->name);
+//        myObj4->groups=myObj4->groups->next;
 //    }
     glmUnitize(myObj);
     glmUnitize(myObj2);
     glmUnitize(myObj3);
+    glmUnitize(myObj4);
 
 	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
 	glutInitWindowSize(500,500);
