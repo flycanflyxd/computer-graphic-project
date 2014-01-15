@@ -44,9 +44,9 @@ GLdouble eye_x = 0.0, eye_y = 3, eye_z = -3.5,
          center_x = eye_x + sin(phi) * cos(theta), center_y = eye_y + cos(phi), center_z = 4*sin(phi) * sin(theta),
          up_x = 0.0, up_y = 1.0, up_z = 0.0;
 GLuint *textureid;
-int number=23;
+int number=24;
 //ColorImage texture[2]; //Alduin
-ColorImage texture[23]; //Alduin
+ColorImage texture[24]; //Alduin
 
 int t=0;
 
@@ -59,10 +59,13 @@ float angle=0;
 
 bool shader = false;
 GLdouble lightTheta = 10.0;
-GLfloat light0_pos[]={0.0, 100.0, 100.0, 1.0};
+GLfloat light0_pos[]={100.0, 100.0, 100.0, 1.0};
 GLfloat light0_ambient[] = {0.9, 0.9, 0.9, 1.0};
 GLfloat light0_diffuse[] = {0.7, 0.7, 0.7, 1.0};
 GLfloat light0_specular[] = {0.7, 0.7, 0.7, 1.0};
+
+bool night = false;
+bool isAlpha = false;
 
 void drawObj(GLMmodel *myObj,int j)
 {
@@ -120,9 +123,16 @@ void setShaders()
 
     glUniform1iARB(glGetUniformLocationARB(p, "texture"), 0);
     glUniform3fARB(glGetUniformLocationARB(p, "light"), light0_pos[0], light0_pos[1], light0_pos[2]);
-    glUniform4fARB(glGetUniformLocationARB(p, "l_ambient"), 0.9, 0.9, 0.9, 1.0 );
-    glUniform4fARB(glGetUniformLocationARB(p, "l_diffuse"), 0.7, 0.7, 0.7, 1.0 );
-    glUniform4fARB(glGetUniformLocationARB(p, "l_specular"), 0.7, 0.7, 0.7, 1.0 );
+    if(!night)
+    {
+        glUniform4fARB(glGetUniformLocationARB(p, "l_ambient"), 1.4, 1.4, 1.4, 1.0 );
+    }
+    else
+    {
+        glUniform4fARB(glGetUniformLocationARB(p, "l_ambient"), 0.3, 0.3, 0.3, 1.0 );
+    }
+        glUniform4fARB(glGetUniformLocationARB(p, "l_diffuse"), 0.7, 0.7, 0.7, 1.0 );
+        glUniform4fARB(glGetUniformLocationARB(p, "l_specular"), 0.7, 0.7, 0.7, 1.0 );
 }
 
 void drawtree(float x,float y,float z)
@@ -156,10 +166,10 @@ void drawforest()
     {
         drawtree(16-2*i,1.55,28);
     }
-    for(int i=0;i<20;i+=1)
-    {
-        drawtree(15-2*i,1.55,25);
-    }
+//    for(int i=0;i<20;i+=1)
+//    {
+//        drawtree(15-2*i,1.55,25);
+//    }
 }
 
 void drawsoldier1(float x,float y,float z)
@@ -171,14 +181,14 @@ void drawsoldier1(float x,float y,float z)
 
 void drawmilitary1()
 {
-    for(int i=0;i<5;i+=1)
+    for(int i=0;i<2;i+=1)
     {
         drawsoldier1(15,0.6,0-2*i);
     }
-    for(int i=0;i<5;i+=1)
-    {
-        drawsoldier1(13,0.6,0-2*i);
-    }
+//    for(int i=0;i<5;i+=1)
+//    {
+//        drawsoldier1(13,0.6,0-2*i);
+//    }
 }
 
 void drawsoldier2(float x,float y,float z)
@@ -190,14 +200,14 @@ void drawsoldier2(float x,float y,float z)
 
 void drawmilitary2()
 {
-    for(int i=0;i<5;i+=1)
+    for(int i=0;i<2;i+=1)
     {
         drawsoldier2(-15,0.6,0-2*i);
     }
-    for(int i=0;i<5;i+=1)
-    {
-        drawsoldier2(-13,0.6,0-2*i);
-    }
+//    for(int i=0;i<5;i+=1)
+//    {
+//        drawsoldier2(-13,0.6,0-2*i);
+//    }
 }
 
 void display(void)
@@ -209,6 +219,11 @@ void display(void)
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     gluLookAt(eye_x, eye_y, eye_z, center_x, center_y, center_z, up_x, up_y, up_z);
+
+    if(shader)
+    {
+        setShaders();
+    }
 
     //lighting
     glEnable(GL_LIGHTING);
@@ -249,22 +264,36 @@ void display(void)
 
     glScalef(8,8,8);    //environment
     glTranslatef(0.0, 0.375, 0.0);
-    glBindTexture(GL_TEXTURE_2D, textureid[2]);
+    if(!isAlpha)
+    {
+        glBindTexture(GL_TEXTURE_2D, textureid[2]);
+    }
+    else
+    {
+        glBindTexture(GL_TEXTURE_2D, textureid[23]);
+    }
     glBegin( GL_QUADS ); //ground
         glTexCoord2f(0.0,0.0);
 		glVertex3f( 10.0, -0.43, 10.0 );
 
-        glTexCoord2f(0.0,1.0);
+        glTexCoord2f(0.0,50.0);
 		glVertex3f( 10.0, -0.43, -10.0 );
 
-        glTexCoord2f(1.0,1.0);
+        glTexCoord2f(50.0,50.0);
 		glVertex3f( -10.0, -0.43, -10.0 );
 
-        glTexCoord2f(1.0,0.0);
+        glTexCoord2f(50.0,0.0);
 		glVertex3f( -10.0, -0.43, 10.0 );
 	glEnd();
 
-    glBindTexture(GL_TEXTURE_2D, textureid[3]);
+    if(!isAlpha)
+    {
+        glBindTexture(GL_TEXTURE_2D, textureid[3]);
+    }
+    else
+    {
+        glBindTexture(GL_TEXTURE_2D, textureid[23]);
+    }
 	glBegin( GL_QUADS ); //sky
 		glTexCoord2f(0.0,0.0);
 		glVertex3f( 10.0, 9.0/*14.43*/, 10.0 );
@@ -399,25 +428,25 @@ void keyboard(unsigned char key,int x,int y)
 
     if(key=='+')
     {
-//        lightTheta += 10.0;
-        lightTheta+=PI/3;
-        if(lightTheta>=PI*2)
-        {
-            lightTheta-=PI*2;
-        }
-        light0_pos[1]=100*sin(lightTheta);
-        light0_pos[2]=100*cos(lightTheta);
+        lightTheta += 10.0;
+//        lightTheta+=PI/3;
+//        if(lightTheta>=PI*2)
+//        {
+//            lightTheta-=PI*2;
+//        }
+//        light0_pos[1]=100*sin(lightTheta);
+//        light0_pos[2]=100*cos(lightTheta);
     }
     else if(key=='-')
     {
-//        lightTheta -= 10.0;
-        lightTheta-=PI/3;
-        if(lightTheta<=0)
-        {
-            lightTheta+=PI*2;
-        }
-        light0_pos[1]=100*sin(lightTheta);
-        light0_pos[2]=100*cos(lightTheta);
+        lightTheta -= 10.0;
+//        lightTheta-=PI/3;
+//        if(lightTheta<=0)
+//        {
+//            lightTheta+=PI*2;
+//        }
+//        light0_pos[1]=100*sin(lightTheta);
+//        light0_pos[2]=100*cos(lightTheta);
     }
 
 
@@ -445,6 +474,15 @@ void keyboard(unsigned char key,int x,int y)
         {
             setShaders();
         }
+    }
+    if(key == 'n' || key == 'N')
+    {
+        night = !night;
+        setShaders();
+    }
+    if(key == 'z' || key == 'Z')
+    {
+        isAlpha = !isAlpha;
     }
 }
 
@@ -546,6 +584,7 @@ void init()
     printf("\nLoad Tree texture\n");
     loadTexture(textureid[21], "tppm/palm_leaf_d.ppm");
     loadTexture(textureid[22], "tppm/palm_trunk_d.ppm");
+    loadTexture(textureid[23], "environmentppm/alpha.ppm");
 }
 
 int main(int argc, char **argv)
