@@ -59,10 +59,10 @@ float angle=0;
 
 bool shader = false;
 GLdouble lightTheta = 10.0;
-GLfloat light0_pos[]={1.0, 0.0, 1.0, 1.0};
-GLfloat light0_ambient[] = {0.4, 0.4, 0.4, 1.0};
+GLfloat light0_pos[]={0.0, 100.0, 100.0, 1.0};
+GLfloat light0_ambient[] = {0.9, 0.9, 0.9, 1.0};
 GLfloat light0_diffuse[] = {0.7, 0.7, 0.7, 1.0};
-GLfloat light0_specular[] = {1.0, 1.0, 1.0, 1.0};
+GLfloat light0_specular[] = {0.7, 0.7, 0.7, 1.0};
 
 void drawObj(GLMmodel *myObj,int j)
 {
@@ -78,7 +78,7 @@ void drawObj(GLMmodel *myObj,int j)
         {
             for (int v=0; v<3; v+=1)
             {
-//                glNormal3fv(& myObj->vertices[myObj->triangles[groups->triangles[i]].nindices[v]*3 ]);
+                glNormal3fv(& myObj->vertices[myObj->triangles[groups->triangles[i]].nindices[v]*3 ]);
                 glTexCoord2fv(& myObj->texcoords[myObj->triangles[groups->triangles[i]].tindices[v]*2 ]);
                 glVertex3fv(& myObj->vertices[myObj->triangles[groups->triangles[i]].vindices[v]*3 ]);
             }
@@ -120,9 +120,9 @@ void setShaders()
 
     glUniform1iARB(glGetUniformLocationARB(p, "texture"), 0);
     glUniform3fARB(glGetUniformLocationARB(p, "light"), light0_pos[0], light0_pos[1], light0_pos[2]);
-    glUniform4fARB(glGetUniformLocationARB(p, "l_ambient"), 0.4, 0.4, 0.4, 1.0 );
+    glUniform4fARB(glGetUniformLocationARB(p, "l_ambient"), 0.9, 0.9, 0.9, 1.0 );
     glUniform4fARB(glGetUniformLocationARB(p, "l_diffuse"), 0.7, 0.7, 0.7, 1.0 );
-    glUniform4fARB(glGetUniformLocationARB(p, "l_specular"), 1.0, 1.0, 1.0, 1.0 );
+    glUniform4fARB(glGetUniformLocationARB(p, "l_specular"), 0.7, 0.7, 0.7, 1.0 );
 }
 
 void drawtree(float x,float y,float z)
@@ -399,25 +399,25 @@ void keyboard(unsigned char key,int x,int y)
 
     if(key=='+')
     {
-        lightTheta += 10.0;
-//        lightTheta+=PI/6;
-//        if(lightTheta>=PI*2)
-//        {
-//            lightTheta-=PI*2;
-//        }
-//        light0_pos[1]=sin(lightTheta);
-//        light0_pos[2]=cos(lightTheta);
+//        lightTheta += 10.0;
+        lightTheta+=PI/3;
+        if(lightTheta>=PI*2)
+        {
+            lightTheta-=PI*2;
+        }
+        light0_pos[1]=100*sin(lightTheta);
+        light0_pos[2]=100*cos(lightTheta);
     }
     else if(key=='-')
     {
-        lightTheta -= 10.0;
-//        lightTheta-=PI/6;
-//        if(lightTheta<=0)
-//        {
-//            lightTheta+=PI*2;
-//        }
-//        light0_pos[1]=sin(lightTheta);
-//        light0_pos[2]=cos(lightTheta);
+//        lightTheta -= 10.0;
+        lightTheta-=PI/3;
+        if(lightTheta<=0)
+        {
+            lightTheta+=PI*2;
+        }
+        light0_pos[1]=100*sin(lightTheta);
+        light0_pos[2]=100*cos(lightTheta);
     }
 
 
@@ -434,6 +434,9 @@ void keyboard(unsigned char key,int x,int y)
         eye_z = -3.5;
         theta = -PI/2;
         phi = PI / 2;
+        center_x = eye_x + sin(phi) * cos(theta);
+        center_y = eye_y + cos(phi);
+        center_z = 4*sin(phi) * sin(theta);
     }
     if(key == 't' || key == 'T')
     {
@@ -577,10 +580,10 @@ int main(int argc, char **argv)
     init();
 
 	glewInit();
-	if(shader)
-	{
-	    setShaders();
-	}
+//	if(shader)
+//	{
+//	    setShaders();
+//	}
 
 	glutMainLoop();
     return 0;
